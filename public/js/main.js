@@ -132,6 +132,8 @@ function spawnEnemy(context, time) {
 }
 
 var currentFrame = 1;
+var isPlayerAttacking = false;
+var timePlayerStartedAttack = 0;
 function update(time, delta) {
     let nextFrame = Math.floor(time / (1_000/60));
     if ( currentFrame < nextFrame ) {
@@ -146,24 +148,38 @@ function update(time, delta) {
         enemies[i].body.setVelocityX(-100);
     }
 
-    if (cursors.left.isDown)
-    {
-        player.body.setVelocityX(-200);
-        player.anims.play('walk', true); // walk left
-        player.flipX = true; // flip the sprite to the left
+    if (canPlayerMove()) {
+        if (cursors.space.isDown)
+        {
+            isPlayerAttacking = true;
+            timePlayerStartedAttack = time;
+        }
+        else if (cursors.left.isDown)
+        {
+            player.body.setVelocityX(-200);
+            player.anims.play('walk', true); // walk left
+            player.flipX = true; // flip the sprite to the left
+        }
+        else if (cursors.right.isDown)
+        {
+            player.body.setVelocityX(200);
+            player.anims.play('walk', true);
+            player.flipX = false; // use the original sprite looking to the right
+        } else {
+            player.body.setVelocityX(0);
+            player.anims.play('idle', true);
+        }
     }
-    else if (cursors.right.isDown)
-    {
-        player.body.setVelocityX(200);
+
+    if (isPlayerAttacking) {
         player.anims.play('walk', true);
-        player.flipX = false; // use the original sprite looking to the right
-    } else {
-        player.body.setVelocityX(0);
-        player.anims.play('idle', true);
+
+        if ( time - timePlayerStartedAttack > 2_000 ) {
+            isPlayerAttacking = false;  
+        }
     }
-    // jump 
-    if (cursors.up.isDown && player.body.onFloor())
-    {
-        player.body.setVelocityY(-500);        
-    }
+}
+
+function canPlayerMove() {
+    return !isPlayerAttacking;
 }
