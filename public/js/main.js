@@ -128,6 +128,8 @@ function spawnEnemy(context, time) {
     context.physics.add.collider(player, enemy);
     enemy.flipX = true;
     enemy.x = 1200;
+    enemy.y = 450;
+    enemy.body.setVelocityX(-50 * Math.random() - 50)
     enemies.push(enemy);
 }
 
@@ -141,11 +143,12 @@ function update(time, delta) {
         currentFrame = nextFrame;
     }
 
-    if (time - lastEnemySpawnTime > 10_000) {
+    if (time - lastEnemySpawnTime > 3_000) {
         spawnEnemy(this, time);
     }
 
-    enemies.forEach(enemy => enemy.body.setVelocityX(-500 * Math.random()));
+    enemies.forEach(enemy => 
+        enemy.anims.play('walk', true));
 
     if (canPlayerMove()) {
         if (cursors.space.isDown) {
