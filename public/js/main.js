@@ -60,8 +60,8 @@ function create() {
 
     // create the player sprite    
     player = this.physics.add.sprite(216, 216, 'player');
-    player.x = 0;
-    player.y = 350;
+    player.x = 200;
+    player.y = 375;
     player.body.setSize(player.width - 195, player.height);
     player.setCollideWorldBounds(true); // don't go out of the map    
 
@@ -133,8 +133,9 @@ function spawnEnemy(context, time) {
     context.physics.add.collider(player, enemy);
     enemy.flipX = true;
     enemy.x = 1200;
-    enemy.y = 350;
+    enemy.y = 375;
     enemy.body.setVelocityX(-50 * Math.random() - 50)
+    enemy.tint = '0x'+Math.floor(Math.random()*16777215).toString(16);
     enemies.push(enemy);
 }
 
