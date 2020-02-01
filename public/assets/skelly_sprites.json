@@ -1,7 +1,7 @@
 {
     "frames": [
         {
-            "filename": "hurt_1",
+            "filename": "idle02",
             "frame": {
                 "x": 0,
                 "y": 0,
@@ -22,7 +22,7 @@
             }
         },
         {
-            "filename": "midjab_1",
+            "filename": "idle01",
             "frame": {
                 "x": 1083,
                 "y": 0,
@@ -43,7 +43,7 @@
             }
         },
         {
-            "filename": "idle_1",
+            "filename": "walk02",
             "frame": {
                 "x": 0,
                 "y": 1085,
@@ -64,7 +64,7 @@
             }
         },
         {
-            "filename": "Idle_2",
+            "filename": "walk03",
             "frame": {
                 "x": 1083,
                 "y": 1085,
@@ -85,7 +85,7 @@
             }
         },
         {
-            "filename": "walk_1",
+            "filename": "walk01",
             "frame": {
                 "x": 2166,
                 "y": 0,
@@ -106,7 +106,7 @@
             }
         },
         {
-            "filename": "walk_2",
+            "filename": "kick02",
             "frame": {
                 "x": 2166,
                 "y": 1085,
@@ -127,7 +127,7 @@
             }
         },
         {
-            "filename": "walk_3",
+            "filename": "kick01",
             "frame": {
                 "x": 0,
                 "y": 2170,
@@ -148,7 +148,7 @@
             }
         },
         {
-            "filename": "hurt_2",
+            "filename": "midjab02",
             "frame": {
                 "x": 1083,
                 "y": 2170,
@@ -169,7 +169,7 @@
             }
         },
         {
-            "filename": "kick__1",
+            "filename": "midjab01",
             "frame": {
                 "x": 2166,
                 "y": 2170,
@@ -190,7 +190,7 @@
             }
         },
         {
-            "filename": "kick_2",
+            "filename": "uppercut01",
             "frame": {
                 "x": 3249,
                 "y": 0,
@@ -211,7 +211,7 @@
             }
         },
         {
-            "filename": "midjab_2",
+            "filename": "uppercut02",
             "frame": {
                 "x": 3249,
                 "y": 1085,
@@ -232,7 +232,7 @@
             }
         },
         {
-            "filename": "uppercut_1",
+            "filename": "uppercut03",
             "frame": {
                 "x": 3249,
                 "y": 2170,
@@ -253,7 +253,7 @@
             }
         },
         {
-            "filename": "uppercut_2",
+            "filename": "hurt02",
             "frame": {
                 "x": 0,
                 "y": 3255,
@@ -274,7 +274,7 @@
             }
         },
         {
-            "filename": "uppercut_3",
+            "filename": "hurt01",
             "frame": {
                 "x": 1083,
                 "y": 3255,
@@ -298,7 +298,7 @@
     "meta": {
         "app": "https://www.leshylabs.com/apps/sstool/",
         "version": "Leshy SpriteSheet Tool v0.8.4",
-        "image": "spritesheet.png",
+        "image": "skelly_spritesheet.png",
         "size": {
             "w": 4331,
             "h": 4339
