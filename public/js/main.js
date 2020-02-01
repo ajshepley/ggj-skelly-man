@@ -1,6 +1,6 @@
 var config = {
     type: Phaser.AUTO,
-    width: 800,
+    width: 1200,
     height: 600,
     physics: {
         default: 'arcade',
@@ -21,6 +21,7 @@ var game = new Phaser.Game(config);
 
 var map;
 var player;
+let enemies = [];
 var cursors;
 var groundLayer, coinLayer;
 var text;
@@ -87,6 +88,7 @@ function create() {
         frameRate: 10,
     });
 
+    spawnEnemy(this, 0);
 
     cursors = this.input.keyboard.createCursorKeys();
 
@@ -115,7 +117,35 @@ function collectCoin(sprite, tile) {
     return false;
 }
 
+let lastEnemySpawnTime;
+function spawnEnemy(context, time) {
+    lastEnemySpawnTime = time;
+    let enemy = context.physics.add.sprite(200, 200, 'player');
+
+    enemy.setCollideWorldBounds(true);
+    enemy.body.setSize(enemy.width, enemy.height-8);
+    context.physics.add.collider(groundLayer, enemy);
+    context.physics.add.collider(player, enemy);
+    enemy.flipX = true;
+    enemy.x = 1200;
+    enemies.push(enemy);
+}
+
+var currentFrame = 1;
 function update(time, delta) {
+    let nextFrame = Math.floor(time / (1_000/60));
+    if ( currentFrame < nextFrame ) {
+        currentFrame = nextFrame;
+    }
+
+    if (time - lastEnemySpawnTime > 10_000) {
+        spawnEnemy(this, time);
+    }
+
+    for(var i = 0; i < enemies.length; i++) {
+        enemies[i].body.setVelocityX(-100);
+    }
+
     if (cursors.left.isDown)
     {
         player.body.setVelocityX(-200);
