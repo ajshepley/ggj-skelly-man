@@ -5,7 +5,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: {y: 500},
+            gravity: { y: 500 },
             debug: false
         }
     },
@@ -31,7 +31,7 @@ function preload() {
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
-    this.load.spritesheet('tiles', 'assets/tiles.png', {frameWidth: 70, frameHeight: 70});
+    this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 70, frameHeight: 70 });
     // simple coin image
     this.load.image('coin', 'assets/coinGold.png');
     // player animations
@@ -40,7 +40,7 @@ function preload() {
 
 function create() {
     // load the map 
-    map = this.make.tilemap({key: 'map'});
+    map = this.make.tilemap({ key: 'map' });
 
     // tiles for the ground layer
     var groundTiles = map.addTilesetImage('tiles');
@@ -62,10 +62,10 @@ function create() {
     player = this.physics.add.sprite(200, 200, 'player');
     player.setBounce(0.2); // our player will bounce from items
     player.setCollideWorldBounds(true); // don't go out of the map    
-    
+
     // small fix to our player images, we resize the physics body object slightly
-    player.body.setSize(player.width, player.height-8);
-    
+    player.body.setSize(player.width, player.height - 8);
+
     // player will collide with the level tiles 
     this.physics.add.collider(groundLayer, player);
 
@@ -77,14 +77,14 @@ function create() {
     // player walk animation
     this.anims.create({
         key: 'walk',
-        frames: this.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
+        frames: this.anims.generateFrameNames('player', { prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2 }),
         frameRate: 10,
         repeat: -1
     });
     // idle with only one frame, so repeat is not neaded
     this.anims.create({
         key: 'idle',
-        frames: [{key: 'player', frame: 'p1_stand'}],
+        frames: [{ key: 'player', frame: 'p1_stand' }],
         frameRate: 10,
     });
 
@@ -123,7 +123,7 @@ function spawnEnemy(context, time) {
     let enemy = context.physics.add.sprite(200, 200, 'player');
 
     enemy.setCollideWorldBounds(true);
-    enemy.body.setSize(enemy.width, enemy.height-8);
+    enemy.body.setSize(enemy.width, enemy.height - 8);
     context.physics.add.collider(groundLayer, enemy);
     context.physics.add.collider(player, enemy);
     enemy.flipX = true;
@@ -134,9 +134,10 @@ function spawnEnemy(context, time) {
 var currentFrame = 1;
 var isPlayerAttacking = false;
 var timePlayerStartedAttack = 0;
+
 function update(time, delta) {
-    let nextFrame = Math.floor(time / (1_000/60));
-    if ( currentFrame < nextFrame ) {
+    let nextFrame = Math.floor(time / (1_000 / 60));
+    if (currentFrame < nextFrame) {
         currentFrame = nextFrame;
     }
 
@@ -144,24 +145,17 @@ function update(time, delta) {
         spawnEnemy(this, time);
     }
 
-    for(var i = 0; i < enemies.length; i++) {
-        enemies[i].body.setVelocityX(-100);
-    }
+    enemies.forEach(enemy => enemy.body.setVelocityX(-500 * Math.random()));
 
     if (canPlayerMove()) {
-        if (cursors.space.isDown)
-        {
+        if (cursors.space.isDown) {
             isPlayerAttacking = true;
             timePlayerStartedAttack = time;
-        }
-        else if (cursors.left.isDown)
-        {
+        } else if (cursors.left.isDown) {
             player.body.setVelocityX(-200);
             player.anims.play('walk', true); // walk left
             player.flipX = true; // flip the sprite to the left
-        }
-        else if (cursors.right.isDown)
-        {
+        } else if (cursors.right.isDown) {
             player.body.setVelocityX(200);
             player.anims.play('walk', true);
             player.flipX = false; // use the original sprite looking to the right
@@ -174,8 +168,8 @@ function update(time, delta) {
     if (isPlayerAttacking) {
         player.anims.play('walk', true);
 
-        if ( time - timePlayerStartedAttack > 2_000 ) {
-            isPlayerAttacking = false;  
+        if (time - timePlayerStartedAttack > 2_000) {
+            isPlayerAttacking = false;
         }
     }
 }
