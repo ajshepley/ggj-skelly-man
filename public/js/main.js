@@ -1,5 +1,3 @@
-"use strict";
-
 var config = {
     type: Phaser.AUTO,
     width: 1200,
@@ -37,7 +35,7 @@ function preload() {
     // simple coin image
     this.load.image('coin', 'assets/coinGold.png');
     // player animations
-    this.load.atlas('player', 'assets/player.png', 'assets/player.json');
+    this.load.atlas('player', 'assets/skelly_spritesheet.png', 'assets/skelly_sprites.json');
 }
 
 function create() {
@@ -61,12 +59,12 @@ function create() {
     this.physics.world.bounds.height = groundLayer.height;
 
     // create the player sprite    
-    player = this.physics.add.sprite(200, 200, 'player');
-    player.setBounce(0.2); // our player will bounce from items
+    player = this.physics.add.sprite(216, 216, 'player');
+    player.x = 0;
+    player.y = 350;
+    player.body.setSize(player.width, player.height);
     player.setCollideWorldBounds(true); // don't go out of the map    
 
-    // small fix to our player images, we resize the physics body object slightly
-    player.body.setSize(player.width, player.height - 8);
 
     // player will collide with the level tiles 
     this.physics.add.collider(groundLayer, player);
@@ -79,15 +77,21 @@ function create() {
     // player walk animation
     this.anims.create({
         key: 'walk',
-        frames: this.anims.generateFrameNames('player', { prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2 }),
-        frameRate: 10,
+        frames: this.anims.generateFrameNames('player', { prefix: 'walk', start: 1, end: 3, zeroPad: 2 }),
+        frameRate: 6,
         repeat: -1
     });
     // idle with only one frame, so repeat is not neaded
     this.anims.create({
         key: 'idle',
-        frames: [{ key: 'player', frame: 'p1_stand' }],
-        frameRate: 10,
+        frames: this.anims.generateFrameNames('player', { prefix: 'idle', start: 1, end: 2, zeroPad: 2 }),
+        frameRate: 6,
+    });
+    // idle with only one frame, so repeat is not neaded
+    this.anims.create({
+        key: 'kick',
+        frames: this.anims.generateFrameNames('player', { prefix: 'kick', start: 1, end: 2, zeroPad: 2 }),
+        frameRate: 6,
     });
 
     spawnEnemy(this, 0);
@@ -122,15 +126,14 @@ function collectCoin(sprite, tile) {
 let lastEnemySpawnTime;
 function spawnEnemy(context, time) {
     lastEnemySpawnTime = time;
-    let enemy = context.physics.add.sprite(200, 200, 'player');
-
+    let enemy = context.physics.add.sprite(216, 216, 'player');
+    enemy.body.setSize(enemy.width, enemy.height);
     enemy.setCollideWorldBounds(true);
-    enemy.body.setSize(enemy.width, enemy.height - 8);
     context.physics.add.collider(groundLayer, enemy);
     context.physics.add.collider(player, enemy);
     enemy.flipX = true;
     enemy.x = 1200;
-    enemy.y = 450;
+    enemy.y = 350;
     enemy.body.setVelocityX(-50 * Math.random() - 50)
     enemies.push(enemy);
 }
@@ -171,9 +174,11 @@ function update(time, delta) {
     }
 
     if (isPlayerAttacking) {
-        player.anims.play('walk', true);
 
-        if (time - timePlayerStartedAttack > 2_000) {
+        player.body.setVelocityX(0);
+        player.anims.play('kick', true);
+
+        if (time - timePlayerStartedAttack > 1_000 / 3) {
             isPlayerAttacking = false;
         }
     }
