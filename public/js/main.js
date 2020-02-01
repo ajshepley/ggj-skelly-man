@@ -62,7 +62,7 @@ function create() {
     player = this.physics.add.sprite(216, 216, 'player');
     player.x = 0;
     player.y = 350;
-    player.body.setSize(player.width, player.height);
+    player.body.setSize(player.width - 195, player.height);
     player.setCollideWorldBounds(true); // don't go out of the map    
 
 
@@ -127,7 +127,7 @@ let lastEnemySpawnTime;
 function spawnEnemy(context, time) {
     lastEnemySpawnTime = time;
     let enemy = context.physics.add.sprite(216, 216, 'player');
-    enemy.body.setSize(enemy.width, enemy.height);
+    enemy.body.setSize(enemy.width - 195, enemy.height);
     enemy.setCollideWorldBounds(true);
     context.physics.add.collider(groundLayer, enemy);
     context.physics.add.collider(player, enemy);
