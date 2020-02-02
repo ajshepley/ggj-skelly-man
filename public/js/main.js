@@ -181,7 +181,8 @@ function create() {
 }
 
 function showGameOverImage(gameContext) {
-    gameContext.add.image(PLAYER_STATE.getX(), 350, 'gameOverImage');
+    let x = Math.max(PLAYER_STATE.getX(), 690);
+    gameContext.add.image(x, 350, 'gameOverImage');
 }
 
 // TODO: Move these constants to the top? Wherever they work for David.
@@ -259,6 +260,7 @@ const PLAYER_STATE = {
             var amount = ENEMY_DAMAGE_PER_HIT;
         }
         this.health -= amount;
+        this.health = Math.max(this.health, 0);
 
         if (this.health <= 0) {
             this.killPlayer();
