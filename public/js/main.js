@@ -45,7 +45,7 @@ const MAP_HEIGHT_IN_TILES = 10;
 const FLOOR_SIZE_IN_TILES = 3;
 const WALK_TILE_BUFFER_IN_TILES = 1;
 const BACKGROUND_SIZE_IN_TILEs = MAP_HEIGHT_IN_TILES - (FLOOR_SIZE_IN_TILES + WALK_TILE_BUFFER_IN_TILES);
-const SKELLIES_SAVED_TO_WIN = 1;
+const SKELLIES_SAVED_TO_WIN = 5;
 
 function preload() {
     // load background images
