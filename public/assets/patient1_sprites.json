@@ -1,0 +1,224 @@
+{
+    "frames": [
+        {
+            "filename": "pidle01",
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pidle02",
+            "frame": {
+                "x": 164,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pwalk01",
+            "frame": {
+                "x": 0,
+                "y": 236,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pwalk02",
+            "frame": {
+                "x": 164,
+                "y": 236,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pwalk03",
+            "frame": {
+                "x": 328,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pattack01",
+            "frame": {
+                "x": 328,
+                "y": 236,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pattack02",
+            "frame": {
+                "x": 492,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pattack03",
+            "frame": {
+                "x": 492,
+                "y": 236,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pattack04",
+            "frame": {
+                "x": 0,
+                "y": 472,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        },
+        {
+            "filename": "pattack05",
+            "frame": {
+                "x": 164,
+                "y": 472,
+                "w": 163,
+                "h": 235
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 163,
+                "h": 235
+            },
+            "sourceSize": {
+                "w": 163,
+                "h": 235
+            }
+        }
+    ],
+    "meta": {
+        "app": "https://www.leshylabs.com/apps/sstool/",
+        "version": "Leshy SpriteSheet Tool v0.8.4",
+        "image": "patient1_spritesheet.png",
+        "size": {
+            "w": 655,
+            "h": 707
+        },
+        "scale": 1
+    }
+}
