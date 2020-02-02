@@ -38,6 +38,9 @@ const ENABLE_DEBUG_LOGGING = true;
 const TILE_SIZE = 70; // 70 pixels
 const MAP_WIDTH_IN_TILES = 150;
 const MAP_HEIGHT_IN_TILES = 10;
+const FLOOR_SIZE_IN_TILES = 3;
+const WALK_TILE_BUFFER_IN_TILES = 1;
+const BACKGROUND_SIZE_IN_TILEs = MAP_HEIGHT_IN_TILES - (FLOOR_SIZE_IN_TILES + WALK_TILE_BUFFER_IN_TILES);
 
 function preload() {
     // map made with Tiled in JSON format
