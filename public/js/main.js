@@ -195,10 +195,10 @@ const ENEMY_SPAWN_TIME_MILLIS = 3_000;
 const PLAYER_MOVE_SPEED = 200;
 const ENEMIES_HAVE_ENEMY_COLLISION = true;
 
-const PLAYER_ATTACK_RANGE_PIXELS = 120;
+const PLAYER_ATTACK_RANGE_PIXELS = 150;
 
 // Also use this range for triggering enemy attacks at this range.
-const ENEMY_ATTACK_RANGE_PIXELS = 120;
+const ENEMY_ATTACK_RANGE_PIXELS = 100;
 
 // If the enemy overlaps with the player, do damage even if you're not facing them.
 const PLAYER_ATTACK_DISTANCE_LENIENCY = 10;
