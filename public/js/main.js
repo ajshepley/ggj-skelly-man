@@ -34,7 +34,7 @@ let isKeyDown = {
 };
 var playerAttack = '';
 
-const ENABLE_DEBUG_LOGGING = true;
+const ENABLE_DEBUG_LOGGING = false;
 
 const TILE_SIZE = 70; // 70 pixels
 const MAP_WIDTH_IN_TILES = 150;
@@ -188,7 +188,7 @@ const ENEMIES_HAVE_ENEMY_COLLISION = true;
 const PLAYER_ATTACK_RANGE_PIXELS = 120;
 
 // Also use this range for triggering enemy attacks at this range.
-const ENEMY_ATTACK_RANGE_PIXELS = 80;
+const ENEMY_ATTACK_RANGE_PIXELS = 120;
 
 // If the enemy overlaps with the player, do damage even if you're not facing them.
 const PLAYER_ATTACK_DISTANCE_LENIENCY = 10;
@@ -243,10 +243,10 @@ const PLAYER_STATE = {
         if (amount === undefined) {
             var amount = ENEMY_DAMAGE_PER_HIT;
         }
-        health -= amount;
+        this.health -= amount;
 
-        if (health <= 0) {
-            this.killPlayer;
+        if (this.health <= 0) {
+            this.killPlayer();
         }
     },
     killPlayer: function() {
@@ -443,8 +443,15 @@ function update(time, delta) {
     }
 
     enemies.forEach(enemy => {
-        enemy.sprite.anims.play(`patient${enemy.stateIndex}_walk`, true);
-        enemy.sprite.body.setVelocityX(enemy.velocity);
+        if (isClose(enemy, PLAYER_STATE, ENEMY_ATTACK_RANGE_PIXELS)) {
+            enemy.sprite.anims.play(`patient${enemy.stateIndex}_attack`, true);
+            enemy.sprite.body.setVelocityX(0);
+            PLAYER_STATE.takeDamage(20);
+        }
+        else {
+            enemy.sprite.anims.play(`patient${enemy.stateIndex}_walk`, true);
+            enemy.sprite.body.setVelocityX(enemy.velocity);
+        }
     });
 
     if (canPlayerMove()) {
@@ -482,6 +489,8 @@ function update(time, delta) {
         // Should be covered by the above if-statement, but... better safe than sorry.
         shouldDamageForAttack = true;
     }
+
+    score = PLAYER_STATE.health;
 }
 
 function removeDeadEnemies() {
