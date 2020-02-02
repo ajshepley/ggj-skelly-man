@@ -24,6 +24,7 @@ var punch1Sound;
 var punch2Sound;
 var punch3Sound;
 var punchMissedSound;
+var enemyPunchSound;
 var map;
 var player;
 let enemies = [];
@@ -77,7 +78,8 @@ function preload() {
     this.load.audio('punch1', 'assets/punch1.mp3');
     this.load.audio('punch2', 'assets/punch2.mp3');
     this.load.audio('punch3', 'assets/punch3.mp3');
-    this.load.audio('punchMissed', 'assets/punchMissed.mp3')
+    this.load.audio('punchMissed', 'assets/punchMissed.mp3');
+    this.load.audio('enemyPunch', 'assets/enemyPunch.mp3');
 }
 
 function create() {
@@ -87,6 +89,7 @@ function create() {
     punch2Sound = this.sound.add('punch2');
     punch3Sound = this.sound.add('punch3');
     punchMissedSound = this.sound.add('punchMissed');
+    enemyPunchSound = this.sound.add('enemyPunch');
 
     // add background
     this.add.image(1050, 350, 'background1');
@@ -280,6 +283,8 @@ const PLAYER_STATE = {
         }
         this.health -= amount;
         this.health = Math.max(this.health, 0);
+
+        playAttackSound('enemyPunch');
 
         if (this.health <= 0) {
             this.killPlayer();
@@ -660,6 +665,9 @@ function playAttackSound(damageType) {
             break;
         case 'punchMissed':
             soundToPlay = punchMissedSound;
+            break;
+        case 'enemyPunch':
+            soundToPlay = enemyPunchSound;
         default:
             break;
     }
