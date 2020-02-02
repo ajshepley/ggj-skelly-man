@@ -268,7 +268,9 @@ function canPlayerMove() {
 }
 
 function randomHexColor() {
-    return '0x' + Math.floor(Math.random() * 16777215).toString(16);
+    let FFFFFF = 16777215;
+    let DDDDDD = 14540253;
+    return '0x' + Math.floor((FFFFFF - DDDDDD) * Math.random() + DDDDDD).toString(16);
 }
 
 function randomEnemyXVelocity() {
