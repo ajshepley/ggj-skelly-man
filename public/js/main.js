@@ -20,6 +20,10 @@ var config = {
 var game = new Phaser.Game(config);
 
 var music;
+var punch1Sound;
+var punch2Sound;
+var punch3Sound;
+var punchMissedSound;
 var map;
 var player;
 let enemies = [];
@@ -70,11 +74,19 @@ function preload() {
     this.load.atlas('enemyGuts', 'assets/patient3_spritesheet.png', 'assets/patient3_sprites.json');
     //load music
     this.load.audio('music', 'assets/Lobo_Loco_-_10_-_Spooky_Disco_ID_706.mp3');
+    this.load.audio('punch1', 'assets/punch1.mp3');
+    this.load.audio('punch2', 'assets/punch2.mp3');
+    this.load.audio('punch3', 'assets/punch3.mp3');
+    this.load.audio('punchMissed', 'assets/punchMissed.mp3')
 }
 
 function create() {
     // add music
     music = this.sound.add('music');
+    punch1Sound = this.sound.add('punch1');
+    punch2Sound = this.sound.add('punch2');
+    punch3Sound = this.sound.add('punch3');
+    punchMissedSound = this.sound.add('punchMissed');
 
     // add background
     this.add.image(1050, 350, 'background1');
@@ -179,7 +191,7 @@ function create() {
 
     this.input.on('pointerdown', function(pointer){
         music.play();
-     });
+    });
 }
 
 function showGameOverImage(gameContext) {
@@ -409,6 +421,7 @@ function spawnEnemy(context, time) {
             }
 
             if (!isPlayerAttackEffective(this.getState(), damageType)) {
+                playAttackSound('punchMissed');
                 return;
             }
 
@@ -416,6 +429,7 @@ function spawnEnemy(context, time) {
 
             debugLog(`Enemy #${this.enemyId} took healing damage. New health: ${this.stateIndex} - ${this.getState()}`);
 
+            playAttackSound(playerAttack);
             if (this.stateIndex >= ENEMY_STATES.length) {
                  // Clamp to max enemy state size
                 this.stateIndex = Math.min(ENEMY_STATES.length, this.stateIndex);
@@ -629,6 +643,29 @@ function inputHandler(time) {
     else {
         player.body.setVelocityX(0);
         player.anims.play('idle', true);
+    }
+}
+
+function playAttackSound(damageType) {
+    let soundToPlay = undefined;
+    switch (damageType) {
+        case PLAYER_DAMAGE_TYPES.MID_JAB:
+            soundToPlay = punch1Sound;
+            break;
+        case PLAYER_DAMAGE_TYPES.UPPERCUT:
+            soundToPlay = punch2Sound;
+            break;
+        case PLAYER_DAMAGE_TYPES.KICK:
+            soundToPlay = punch3Sound;
+            break;
+        case 'punchMissed':
+            soundToPlay = punchMissedSound;
+        default:
+            break;
+    }
+
+    if (soundToPlay !== undefined) {
+        soundToPlay.play();
     }
 }
 
