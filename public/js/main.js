@@ -173,6 +173,14 @@ const ENEMY_SPAWN_TIME_MILLIS = 3_000;
 const PLAYER_MOVE_SPEED = 200;
 const ENEMIES_HAVE_ENEMY_COLLISION = true;
 
+const PLAYER_ATTACK_RANGE_PIXLES = 120;
+
+// Also use this range for triggering enemy attacks at this range.
+const ENEMY_ATTACK_RANGE_PIXELS = 80;
+
+// If the enemy overlaps with the player, do damage even if you're not facing them.
+const PLAYER_ATTACK_DISTANCE_LENIENCY = 10;
+
 const PLAYER_SPAWN_LOCATION = {
     X: 200,
     Y: 375
@@ -192,9 +200,27 @@ const ENEMY_STATES = [
 
 const ENEMY_DAMAGE_PER_HIT = 10;
 
+const DIRECTIONS = {
+    left: 0,
+    right: 1
+}
+
 // The variable is constant but its members can change. Yavascript.
 const PLAYER_STATE = {
     health: 100,
+    getName: function() {
+        return "Dr. Skelly, M.D.";
+    },
+    // TODO: It would make sense to inline the Player object here instead.
+    getX: function() {
+        return player.x;
+    },
+    getY: function() {
+        return player.y;
+    },
+    getDirection: function() {
+        return player.flipX ? DIRECTIONS.left : DIRECTIONS.right;
+    },
     takeDamage: function(amount) {
         if (amount === undefined) {
             var amount = ENEMY_DAMAGE_PER_HIT;
@@ -308,16 +334,33 @@ function spawnEnemy(context, time) {
         enemies.forEach(existingEnemy => context.physics.add.collider(existingEnemy, enemy));
     }
 
+    // TODO: Extract to function somehow.
     enemyObject = {
         sprite: enemy,
+        enemyId: 0,
         velocity: randomEnemyXVelocity(),
         stateIndex: 0,
+        getName: function() {
+            return `Enemy #${this.enemyId}`;
+        },
+        getX: function() {
+            return this.sprite.x;
+        },
+        getY: function() {
+            return this.sprite.y;
+        },
+        getDirection: function() {
+            // Opposite of player, the enemies face left by default.
+            return this.sprite.flipX ? DIRECTIONS.right : DIRECTIONS.left;
+        },
         takeDamage: function(amount) {
             if (amount === undefined) {
                 var amount = 1;
             }
-            
+
             this.stateIndex += amount;
+
+            debugLog(`Enemy #${this.enemyId} took ${amount} healing damage. New health: ${this.stateIndex} - ${this.getState()}`);
 
             if (this.stateIndex >= ENEMY_STATES.length) {
                  // Clamp to max enemy state size
@@ -334,16 +377,21 @@ function spawnEnemy(context, time) {
             }
         },
         killEnemy: function() {
+            debugLog(`Enemy #${this.enemyId} destroyed!`);
             // Stub. Do something here. Call global function?
         }
     };
 
     enemies.push(enemyObject);
+    enemyObject.enemyId = enemies.length - 1;
 }
 
 var currentFrame = 1;
 var isPlayerAttacking = false;
 var timePlayerStartedAttack = 0;
+
+// Only damage once per attack animation. 
+let shouldDamageForAttack = true;
 
 function update(time, delta) {
     let nextFrame = Math.floor(time / (1_000 / 60));
@@ -377,9 +425,47 @@ function update(time, delta) {
             player.anims.play('uppercut', true);
         }
 
+        // Only deal damage once per attack. Also known as "active frames".
+        if (shouldDamageForAttack) {
+            damageNearbyEnemies();
+            shouldDamageForAttack = false;
+        }
+
         if (time - timePlayerStartedAttack > 1_000 / 3) {
             isPlayerAttacking = false;
+            shouldDamageForAttack = true
         }
+    } else {
+        // Should be covered by the above if-statement, but... better safe than sorry.
+        shouldDamageForAttack = true;
+    }
+}
+
+function damageNearbyEnemies() {
+    nearbyEnemies = enemies.filter(enemy => isClose(PLAYER_STATE, enemy));
+    enemiesNearbyAndInFront = nearbyEnemies.filter(enemy => isInFront(PLAYER_STATE, enemy));
+    enemiesNearbyAndInFront.forEach(enemy => enemy.takeDamage());
+}
+
+function isClose(entity, otherEntity, range) {
+    distance = Math.abs(entity.getX() - otherEntity.getX());
+    debugLog(`Distance between ${entity.getName()} and ${otherEntity.getName()} is ${distance}`);
+    return distance <= range;
+}
+
+// Is Entity facing otherEntity.
+function isInFront(entity, otherEntity) {
+    distance = entity.getX() - otherEntity.getX();
+    
+    // Be lenient if they're on top of you.
+    // If their distance is positive, they're to the right, so you must be facing right.
+    // If it's negative, they're to the left, so you must be facing left.
+    if (Math.abs(distance) < PLAYER_ATTACK_DISTANCE_LENIENCY) {
+        return true;
+    } else if (distance >= 0) {
+        return entity.getDirection == DIRECTIONS.right;
+    } else if (distance < 0) {
+        return entity.getDirection == DIRECTIONS.left;
     }
 }
 
