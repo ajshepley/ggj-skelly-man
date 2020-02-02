@@ -373,6 +373,11 @@ function spawnEnemy(context, time) {
         },
         takeDamage: function(damageType) {
             debugLog(`Checking if enemy #${this.enemyId} can take ${damageType} damage. Current state: ${this.getState()}`); 
+            if (this.stateIndex === 3) {
+                this.killEnemy();
+                return;
+            }
+
             if (!isPlayerAttackEffective(this.getState(), damageType)) {
                 return;
             }
@@ -445,6 +450,9 @@ function update(time, delta) {
     if (canPlayerMove()) {
         inputHandler(time);
     }
+    
+    let deadEnemies = removeDeadEnemies();
+    deadEnemies.forEach(enemy => enemy.sprite.destroy());
 
     if (isPlayerAttacking) {
         player.body.setVelocityX(0);
@@ -474,6 +482,13 @@ function update(time, delta) {
         // Should be covered by the above if-statement, but... better safe than sorry.
         shouldDamageForAttack = true;
     }
+}
+
+function removeDeadEnemies() {
+    let aliveEnemies = enemies.filter(enemy => enemy.stateIndex !== 3);
+    let deadEnemies = enemies.filter(enemy => enemy.stateIndex === 3);
+    enemies = aliveEnemies;
+    return deadEnemies;
 }
 
 function damageNearbyEnemies(attackType) {
