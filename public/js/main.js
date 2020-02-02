@@ -437,7 +437,7 @@ function update(time, delta) {
     }
 
     enemies.forEach(enemy => {
-        enemy.sprite.anims.play('patient3_walk', true);
+        enemy.sprite.anims.play(`patient${enemy.stateIndex}_walk`, true);
         enemy.sprite.body.setVelocityX(enemy.velocity);
     });
 
