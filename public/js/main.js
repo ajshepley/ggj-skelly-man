@@ -181,7 +181,7 @@ function create() {
 }
 
 function showGameOverImage(gameContext) {
-    gameContext.add.image(gameContext.cameras.main.x + 700, 350, 'gameOverImage');
+    gameContext.add.image(PLAYER_STATE.getX(), 350, 'gameOverImage');
 }
 
 // TODO: Move these constants to the top? Wherever they work for David.
