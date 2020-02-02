@@ -186,14 +186,19 @@ function spawnEnemy(context, time) {
     enemy.flipX = true;
     enemy.x = ENEMY_TEST_SPAWN_LOCATION.X;
     enemy.y = ENEMY_TEST_SPAWN_LOCATION.Y;
-    enemy.body.setVelocityX(randomEnemyXVelocity());
     enemy.tint = randomHexColor();
 
     if (ENEMIES_HAVE_ENEMY_COLLISION) {
         enemies.forEach(existingEnemy => context.physics.add.collider(existingEnemy, enemy));
     }
 
-    enemies.push(enemy);
+    enemyObject = {
+        sprite: enemy,
+        velocity: randomEnemyXVelocity(),
+        state: 'noOrgans'
+    }
+
+    enemies.push(enemyObject);
 }
 
 var currentFrame = 1;
@@ -210,7 +215,10 @@ function update(time, delta) {
         spawnEnemy(this, time);
     }
 
-    enemies.forEach(enemy => enemy.anims.play('walk', true));
+    enemies.forEach(enemy => {
+        enemy.sprite.anims.play('walk', true);
+        enemy.sprite.body.setVelocityX(enemy.velocity);
+    });
 
     if (canPlayerMove()) {
         inputHandler(time);
