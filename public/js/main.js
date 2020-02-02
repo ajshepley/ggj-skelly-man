@@ -23,9 +23,15 @@ var map;
 var player;
 let enemies = [];
 var cursors;
-var groundLayer, coinLayer;
+var groundLayer;
 var text;
 var score = 0;
+let isKeyDown = {
+    a: false,
+    s: false,
+    d: false
+};
+var playerAttack = '';
 
 const ENABLE_DEBUG_LOGGING = true;
 
@@ -34,8 +40,6 @@ function preload() {
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
     this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 70, frameHeight: 70 });
-    // simple coin image
-    this.load.image('coin', 'assets/coinGold.png');
     // player animations
     this.load.atlas('player', 'assets/skelly_spritesheet.png', 'assets/skelly_sprites.json');
 }
@@ -51,11 +55,6 @@ function create() {
     // the player will collide with this layer
     groundLayer.setCollisionByExclusion([-1]);
 
-    // coin image used as tileset
-    var coinTiles = map.addTilesetImage('coin');
-    // add coins as tiles
-    coinLayer = map.createDynamicLayer('Coins', coinTiles, 0, 0);
-
     // set the boundaries of our game world
     this.physics.world.bounds.width = groundLayer.width;
     this.physics.world.bounds.height = groundLayer.height;
@@ -70,16 +69,11 @@ function create() {
     // player will collide with the level tiles 
     this.physics.add.collider(groundLayer, player);
 
-    coinLayer.setTileIndexCallback(17, collectCoin, this);
-    // when the player overlaps with a tile with index 17, collectCoin 
-    // will be called    
-    this.physics.add.overlap(player, coinLayer);
-
     // player walk animation
     this.anims.create({
         key: 'walk',
         frames: this.anims.generateFrameNames('player', { prefix: 'walk', start: 1, end: 3, zeroPad: 2 }),
-        frameRate: 6,
+        frameRate: 9,
         repeat: -1
     });
     // idle with only one frame, so repeat is not neaded
@@ -90,9 +84,21 @@ function create() {
     });
     // idle with only one frame, so repeat is not neaded
     this.anims.create({
+        key: 'midjab',
+        frames: this.anims.generateFrameNames('player', { prefix: 'midjab', start: 1, end: 2, zeroPad: 2 }),
+        frameRate: 6,
+    });
+    // idle with only one frame, so repeat is not neaded
+    this.anims.create({
         key: 'kick',
         frames: this.anims.generateFrameNames('player', { prefix: 'kick', start: 1, end: 2, zeroPad: 2 }),
         frameRate: 6,
+    });
+    // idle with only one frame, so repeat is not neaded
+    this.anims.create({
+        key: 'uppercut',
+        frames: this.anims.generateFrameNames('player', { prefix: 'uppercut', start: 1, end: 3, zeroPad: 2 }),
+        frameRate: 9,
     });
 
     spawnEnemy(this, 0);
@@ -114,16 +120,18 @@ function create() {
     });
     // fix the text to the camera
     text.setScrollFactor(0);
-}
 
-// this function will be called when the player touches a coin
-function collectCoin(sprite, tile) {
-    coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    score++; // add 10 points to the score
-    text.setText(score); // set the text to show the current score
-    return false;
+    // Keyboard input listeners
+    this.input.keyboard.on('keydown_A', function (event) {
+        isKeyDown.a = true;
+    });
+    this.input.keyboard.on('keydown_S', function (event) {
+        isKeyDown.s = true;
+    });
+    this.input.keyboard.on('keydown_D', function (event) {
+        isKeyDown.d = true;
+    });
 }
-
 
 // TODO: Move these constants to the top? Wherever they work for David.
 const PLAYER_SPRITE_SIZE = {
@@ -156,7 +164,6 @@ let lastEnemySpawnTime = 0;
 function spawnEnemy(context, time) {
     let enemyCount = enemies.length;
     if (enemyCount >= ENEMY_SPAWN_COUNT_LIMIT) {
-        debugLog(`Not spawning enemies due to cap of: ${enemyCount}`);
         return;
     }
 
@@ -199,33 +206,60 @@ function update(time, delta) {
     enemies.forEach(enemy => enemy.anims.play('walk', true));
 
     if (canPlayerMove()) {
-        if (cursors.space.isDown) {
-            isPlayerAttacking = true;
-            timePlayerStartedAttack = time;
-        } else if (cursors.left.isDown) {
-            player.body.setVelocityX(-PLAYER_MOVE_SPEED);
-            player.anims.play('walk', true); // walk left
-            player.setOrigin(1, player.originY); // left-aligned sprites, so we set the origin to the far right when flipping.
-            player.flipX = true; // flip the sprite to the left
-        } else if (cursors.right.isDown) {
-            player.body.setVelocityX(PLAYER_MOVE_SPEED);
-            player.anims.play('walk', true);
-            player.setOrigin(0.5, player.originY); // Reset the origin to the middle when the left-aligned sprite faces right.
-            player.flipX = false; // use the original sprite looking to the right
-        } else {
-            player.body.setVelocityX(0);
-            player.anims.play('idle', true);
-        }
+        inputHandler(time);
     }
 
     if (isPlayerAttacking) {
-
         player.body.setVelocityX(0);
-        player.anims.play('kick', true);
+
+        if (playerAttack === 'midjab') {
+            player.anims.play('midjab', true);
+        }
+        else if (playerAttack === 'kick') {
+            player.anims.play('kick', true);
+        }
+        else if (playerAttack === 'uppercut') {
+            player.anims.play('uppercut', true);
+        }
 
         if (time - timePlayerStartedAttack > 1_000 / 3) {
             isPlayerAttacking = false;
         }
+    }
+}
+
+function inputHandler(time) {
+    if (isKeyDown.a || isKeyDown.s || isKeyDown.d) {
+        if (isKeyDown.a) {
+            playerAttack = 'midjab';
+            isKeyDown.a = false;
+        }
+        else if (isKeyDown.s) {
+            playerAttack = 'kick';
+            isKeyDown.s = false;
+        }
+        else if (isKeyDown.d) {
+            playerAttack = 'uppercut';
+            isKeyDown.d = false;
+        }
+        isPlayerAttacking = true;
+        timePlayerStartedAttack = time;
+    }
+    else if (cursors.left.isDown) {
+        player.body.setVelocityX(-PLAYER_MOVE_SPEED);
+        player.anims.play('walk', true); // walk left
+        player.setOrigin(1, player.originY); // left-aligned sprites, so we set the origin to the far right when flipping.
+        player.flipX = true; // flip the sprite to the left
+    }
+    else if (cursors.right.isDown) {
+        player.body.setVelocityX(PLAYER_MOVE_SPEED);
+        player.anims.play('walk', true);
+        player.setOrigin(0.5, player.originY); // Reset the origin to the middle when the left-aligned sprite faces right.
+        player.flipX = false; // use the original sprite looking to the right
+    }
+    else {
+        player.body.setVelocityX(0);
+        player.anims.play('idle', true);
     }
 }
 
