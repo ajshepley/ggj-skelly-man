@@ -51,6 +51,7 @@ function preload() {
     this.load.image('background1', 'assets/background1.png');
     this.load.image('background2', 'assets/background2.png');
     this.load.image('background3', 'assets/background3.png');
+    this.load.image('gameOverImage', 'assets/gameOverImage.png');
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
@@ -177,6 +178,10 @@ function create() {
     this.input.on('pointerdown', function(pointer){
         music.play();
      });
+}
+
+function showGameOverImage(gameContext) {
+    gameContext.add.image(gameContext.cameras.main.x + 750, 350, 'gameOverImage');
 }
 
 // TODO: Move these constants to the top? Wherever they work for David.
@@ -452,6 +457,9 @@ let shouldDamageForAttack = true;
 
 let shouldDamagePlayerForAttack = true;
 var deadTweenActive = false;
+var gameOverScreenPresented = false;
+
+var gameOverCounter = 0;
 
 function update(time, delta) {
     // set being attacked to false
@@ -487,6 +495,13 @@ function update(time, delta) {
         player.body.setVelocityX(0);
         player.body.setVelocityY(-220);
         player.setCollideWorldBounds(false);
+
+        gameOverCounter++;
+        
+        if (!gameOverScreenPresented && gameOverCounter > 180) {
+            showGameOverImage(this);
+            gameOverScreenPresented = true;
+        }
     }
     
     let deadEnemies = removeDeadEnemies();
