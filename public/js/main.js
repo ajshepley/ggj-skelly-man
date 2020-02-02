@@ -181,7 +181,7 @@ function create() {
 }
 
 function showGameOverImage(gameContext) {
-    let x = Math.max(PLAYER_STATE.getX(), 690);
+    let x = Math.max(PLAYER_STATE.getX(), 695);
     gameContext.add.image(x, 350, 'gameOverImage');
 }
 
