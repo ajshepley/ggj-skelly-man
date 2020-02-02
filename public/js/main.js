@@ -107,19 +107,19 @@ function create() {
     });
     // idle with only one frame, so repeat is not neaded
     this.anims.create({
-        key: 'midjab',
+        key: PLAYER_DAMAGE_TYPES.MID_JAB,
         frames: this.anims.generateFrameNames('player', { prefix: 'midjab', start: 1, end: 2, zeroPad: 2 }),
         frameRate: 6,
     });
     // idle with only one frame, so repeat is not neaded
     this.anims.create({
-        key: 'kick',
+        key: PLAYER_DAMAGE_TYPES.KICK,
         frames: this.anims.generateFrameNames('player', { prefix: 'kick', start: 1, end: 2, zeroPad: 2 }),
         frameRate: 6,
     });
     // idle with only one frame, so repeat is not neaded
     this.anims.create({
-        key: 'uppercut',
+        key: PLAYER_DAMAGE_TYPES.UPPERCUT,
         frames: this.anims.generateFrameNames('player', { prefix: 'uppercut', start: 1, end: 3, zeroPad: 2 }),
         frameRate: 9,
     });
@@ -197,6 +197,12 @@ const ENEMY_STATES = [
     "2_eyes",
     "3_intestines"
 ];
+
+const PLAYER_DAMAGE_TYPES = {
+    MID_JAB: "midjab",
+    KICK: "kick",
+    UPPERCUT: "uppercut"
+}
 
 const ENEMY_DAMAGE_PER_HIT = 10;
 
@@ -353,7 +359,7 @@ function spawnEnemy(context, time) {
             // Opposite of player, the enemies face left by default.
             return this.sprite.flipX ? DIRECTIONS.right : DIRECTIONS.left;
         },
-        takeDamage: function(amount) {
+        takeDamage: function(amount, damageType) {
             if (amount === undefined) {
                 var amount = 1;
             }
@@ -415,14 +421,14 @@ function update(time, delta) {
     if (isPlayerAttacking) {
         player.body.setVelocityX(0);
 
-        if (playerAttack === 'midjab') {
-            player.anims.play('midjab', true);
+        if (playerAttack === PLAYER_DAMAGE_TYPES.MID_JAB) {
+            player.anims.play(PLAYER_DAMAGE_TYPES.MID_JAB, true);
         }
-        else if (playerAttack === 'kick') {
-            player.anims.play('kick', true);
+        else if (playerAttack === PLAYER_DAMAGE_TYPES.KICK) {
+            player.anims.play(PLAYER_DAMAGE_TYPES.KICK, true);
         }
-        else if (playerAttack === 'uppercut') {
-            player.anims.play('uppercut', true);
+        else if (playerAttack === PLAYER_DAMAGE_TYPES.UPPERCUT) {
+            player.anims.play(PLAYER_DAMAGE_TYPES.UPPERCUT, true);
         }
 
         // Only deal damage once per attack. Also known as "active frames".
@@ -472,15 +478,15 @@ function isInFront(entity, otherEntity) {
 function inputHandler(time) {
     if (isKeyDown.a || isKeyDown.s || isKeyDown.d) {
         if (isKeyDown.a) {
-            playerAttack = 'midjab';
+            playerAttack = PLAYER_DAMAGE_TYPES.MID_JAB;
             isKeyDown.a = false;
         }
         else if (isKeyDown.s) {
-            playerAttack = 'uppercut';
+            playerAttack = PLAYER_DAMAGE_TYPES.UPPERCUT;
             isKeyDown.s = false;
         }
         else if (isKeyDown.d) {
-            playerAttack = 'kick';
+            playerAttack = PLAYER_DAMAGE_TYPES.KICK;
             isKeyDown.d = false;
         }
         isPlayerAttacking = true;
