@@ -491,7 +491,8 @@ function isClose(entity, otherEntity, range) {
 
 // Is Entity facing otherEntity.
 function isInFront(entity, otherEntity) {
-    distance = entity.getX() - otherEntity.getX();
+    // Distance that otherEntity is further to the right than entity. 
+    distance = otherEntity.getX() - entity.getX();
     
     // Be lenient if they're on top of you.
     // If their distance is positive, they're to the right, so you must be facing right.
@@ -499,9 +500,9 @@ function isInFront(entity, otherEntity) {
     if (Math.abs(distance) < PLAYER_ATTACK_DISTANCE_LENIENCY) {
         return true;
     } else if (distance >= 0) {
-        return entity.getDirection === DIRECTIONS.right;
+        return entity.getDirection() === DIRECTIONS.right;
     } else if (distance < 0) {
-        return entity.getDirection === DIRECTIONS.left;
+        return entity.getDirection() === DIRECTIONS.left;
     }
 }
 
