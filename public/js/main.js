@@ -390,11 +390,11 @@ function inputHandler(time) {
             isKeyDown.a = false;
         }
         else if (isKeyDown.s) {
-            playerAttack = 'kick';
+            playerAttack = 'uppercut';
             isKeyDown.s = false;
         }
         else if (isKeyDown.d) {
-            playerAttack = 'uppercut';
+            playerAttack = 'kick';
             isKeyDown.d = false;
         }
         isPlayerAttacking = true;
