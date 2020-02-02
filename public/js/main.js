@@ -49,6 +49,14 @@ function preload() {
     this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 70, frameHeight: 70 });
     // player animations
     this.load.atlas('player', 'assets/skelly_spritesheet.png', 'assets/skelly_sprites.json');
+    //enemy animations
+    this.load.atlas('enemyBase', 'assets/patient0_spritesheet.png', 'assets/patient0_sprites.json');
+    //enemy animations
+    this.load.atlas('enemyLungs', 'assets/patient1_spritesheet.png', 'assets/patient1_sprites.json');
+    //enemy animations
+    this.load.atlas('enemyEyes', 'assets/patient2_spritesheet.png', 'assets/patient2_sprites.json');
+    //enemy animations
+    this.load.atlas('enemyGuts', 'assets/patient3_spritesheet.png', 'assets/patient3_sprites.json');
 }
 
 function create() {
@@ -108,6 +116,7 @@ function create() {
         frameRate: 9,
     });
 
+    loadEnemyAnimations(this);
     spawnEnemy(this, 0);
 
     cursors = this.input.keyboard.createCursorKeys();
@@ -147,8 +156,8 @@ const PLAYER_SPRITE_SIZE = {
 };
 
 const ENEMY_SPRITE_SIZE = {
-    X: 216,
-    Y: 216
+    X: 162,
+    Y: 235
 }
 
 const ENEMY_SPAWN_COUNT_LIMIT = 5;
@@ -168,6 +177,80 @@ const ENEMY_TEST_SPAWN_LOCATION = {
 
 let lastEnemySpawnTime = 0;
 
+function loadEnemyAnimations(context) {
+    context.anims.create({
+        key: 'patient0_idle',
+        frames: context.anims.generateFrameNames('enemyBase', { prefix: 'pidle', start: 1, end: 2, zeroPad: 2 }),
+        frameRate: 6,
+    });
+
+    context.anims.create({
+        key: 'patient0_walk',
+        frames: context.anims.generateFrameNames('enemyBase', { prefix: 'pwalk', start: 1, end: 3, zeroPad: 2 }),
+        frameRate: 9,
+    });
+
+    context.anims.create({
+        key: 'patient0_attack',
+        frames: context.anims.generateFrameNames('enemyBase', { prefix: 'pattack', start: 1, end: 5, zeroPad: 2 }),
+        frameRate: 15,
+    });
+
+    context.anims.create({
+        key: 'patient1_idle',
+        frames: context.anims.generateFrameNames('enemyLungs', { prefix: 'pidle', start: 1, end: 2, zeroPad: 2 }),
+        frameRate: 6,
+    });
+
+    context.anims.create({
+        key: 'patient1_walk',
+        frames: context.anims.generateFrameNames('enemyLungs', { prefix: 'pwalk', start: 1, end: 3, zeroPad: 2 }),
+        frameRate: 9,
+    });
+
+    context.anims.create({
+        key: 'patient1_attack',
+        frames: context.anims.generateFrameNames('enemyLungs', { prefix: 'pattack', start: 1, end: 5, zeroPad: 2 }),
+        frameRate: 15,
+    });
+
+    context.anims.create({
+        key: 'patient2_idle',
+        frames: context.anims.generateFrameNames('enemyEyes', { prefix: 'pidle', start: 1, end: 2, zeroPad: 2 }),
+        frameRate: 6,
+    });
+
+    context.anims.create({
+        key: 'patient2_walk',
+        frames: context.anims.generateFrameNames('enemyEyes', { prefix: 'pwalk', start: 1, end: 3, zeroPad: 2 }),
+        frameRate: 9,
+    });
+
+    context.anims.create({
+        key: 'patient2_attack',
+        frames: context.anims.generateFrameNames('enemyEyes', { prefix: 'pattack', start: 1, end: 5, zeroPad: 2 }),
+        frameRate: 15,
+    });
+
+    context.anims.create({
+        key: 'patient3_idle',
+        frames: context.anims.generateFrameNames('enemyGuts', { prefix: 'pidle', start: 1, end: 2, zeroPad: 2 }),
+        frameRate: 6,
+    });
+
+    context.anims.create({
+        key: 'patient3_walk',
+        frames: context.anims.generateFrameNames('enemyGuts', { prefix: 'pwalk', start: 1, end: 3, zeroPad: 2 }),
+        frameRate: 9,
+    });
+
+    context.anims.create({
+        key: 'patient3_attack',
+        frames: context.anims.generateFrameNames('enemyGuts', { prefix: 'pattack', start: 1, end: 5, zeroPad: 2 }),
+        frameRate: 15,
+    });
+}
+
 function spawnEnemy(context, time) {
     let enemyCount = enemies.length;
     if (enemyCount >= ENEMY_SPAWN_COUNT_LIMIT) {
@@ -178,12 +261,11 @@ function spawnEnemy(context, time) {
 
     lastEnemySpawnTime = time;
 
-    let enemy = context.physics.add.sprite(ENEMY_SPRITE_SIZE.X, ENEMY_SPRITE_SIZE.Y, 'player');
-    enemy.body.setSize(enemy.width - 195, enemy.height);
+    let enemy = context.physics.add.sprite(ENEMY_SPRITE_SIZE.X, ENEMY_SPRITE_SIZE.Y, 'enemyBase');
+    enemy.body.setSize(enemy.width, enemy.height);
     enemy.setCollideWorldBounds(true);
     context.physics.add.collider(groundLayer, enemy);
     context.physics.add.collider(player, enemy);
-    enemy.flipX = true;
     enemy.x = ENEMY_TEST_SPAWN_LOCATION.X;
     enemy.y = ENEMY_TEST_SPAWN_LOCATION.Y;
     enemy.tint = randomHexColor();
@@ -216,7 +298,7 @@ function update(time, delta) {
     }
 
     enemies.forEach(enemy => {
-        enemy.sprite.anims.play('walk', true);
+        enemy.sprite.anims.play('patient3_walk', true);
         enemy.sprite.body.setVelocityX(enemy.velocity);
     });
 
