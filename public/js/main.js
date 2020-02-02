@@ -354,7 +354,7 @@ function spawnEnemy(context, time) {
     enemy.setCollideWorldBounds(true);
     context.physics.add.collider(groundLayer, enemy);
     context.physics.add.collider(player, enemy);
-    enemy.x = ENEMY_TEST_SPAWN_LOCATION.X;
+    enemy.x = ENEMY_TEST_SPAWN_LOCATION.X + PLAYER_STATE.getX();
     enemy.y = ENEMY_TEST_SPAWN_LOCATION.Y;
     enemy.tint = randomHexColor();
 
@@ -438,11 +438,14 @@ function isPlayerAttackEffective(enemyHealthState, attackType) {
 var currentFrame = 1;
 var isPlayerAttacking = false;
 var timePlayerStartedAttack = 0;
+var isPlayerBeingAttacked = false;
+var timePlayerWasAttacked = 0;
 
 // Only damage once per attack animation. 
 let shouldDamageForAttack = true;
 
 function update(time, delta) {
+    // set being attacked to false
     let nextFrame = Math.floor(time / (1_000 / 60));
     if (currentFrame < nextFrame) {
         currentFrame = nextFrame;
@@ -456,7 +459,11 @@ function update(time, delta) {
         if (isClose(enemy, PLAYER_STATE, ENEMY_ATTACK_RANGE_PIXELS)) {
             enemy.sprite.anims.play(`patient${enemy.stateIndex}_attack`, true);
             enemy.sprite.body.setVelocityX(0);
-            PLAYER_STATE.takeDamage(1);
+            if (!isPlayerBeingAttacked) {
+                timePlayerWasAttacked = time;
+                PLAYER_STATE.takeDamage(ENEMY_DAMAGE_PER_HIT)
+            }
+            isPlayerBeingAttacked = true;
         }
         else {
             enemy.sprite.anims.play(`patient${enemy.stateIndex}_walk`, true);
@@ -499,6 +506,10 @@ function update(time, delta) {
     } else {
         // Should be covered by the above if-statement, but... better safe than sorry.
         shouldDamageForAttack = true;
+    }
+
+    if (isPlayerBeingAttacked && ((time - timePlayerWasAttacked) >= 1_000)) {
+        isPlayerBeingAttacked = false;
     }
 
     health = PLAYER_STATE.health;
