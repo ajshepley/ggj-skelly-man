@@ -19,6 +19,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 
+var music;
 var map;
 var player;
 let enemies = [];
@@ -46,6 +47,7 @@ function preload() {
     // load background images
     this.load.image('background1', 'assets/background1.png');
     this.load.image('background2', 'assets/background2.png');
+    this.load.image('background3', 'assets/background3.png');
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
@@ -60,12 +62,18 @@ function preload() {
     this.load.atlas('enemyEyes', 'assets/patient2_spritesheet.png', 'assets/patient2_sprites.json');
     //enemy animations
     this.load.atlas('enemyGuts', 'assets/patient3_spritesheet.png', 'assets/patient3_sprites.json');
+    //load music
+    this.load.audio('music', 'assets/Lobo_Loco_-_10_-_Spooky_Disco_ID_706.mp3');
 }
 
 function create() {
+    // add music
+    music = this.sound.add('music');
+
     // add background
     this.add.image(1050, 350, 'background1');
     this.add.image(3150, 350, 'background2');
+    this.add.image(5250, 350, 'background3');
 
     // load the map 
     map = this.make.tilemap({ key: 'map' });
@@ -155,6 +163,10 @@ function create() {
     this.input.keyboard.on('keydown_D', function (event) {
         isKeyDown.d = true;
     });
+
+    this.input.on('pointerdown', function(pointer){
+        music.play();
+     });
 }
 
 // TODO: Move these constants to the top? Wherever they work for David.
