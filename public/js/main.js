@@ -372,6 +372,7 @@ function spawnEnemy(context, time) {
             return this.sprite.flipX ? DIRECTIONS.right : DIRECTIONS.left;
         },
         takeDamage: function(damageType) {
+            debugLog(`Checking if enemy #${this.enemyId} can take ${damageType} damage. Current state: ${this.getState()}`); 
             if (!isPlayerAttackEffective(this.getState(), damageType)) {
                 return;
             }
@@ -461,7 +462,7 @@ function update(time, delta) {
         // Only deal damage once per attack. Also known as "active frames".
         if (shouldDamageForAttack) {
             debugLog(`Damaging nearby enemies for attack: ${playerAttack}.`);
-            damageNearbyEnemies();
+            damageNearbyEnemies(playerAttack);
             shouldDamageForAttack = false;
         }
 
