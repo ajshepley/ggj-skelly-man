@@ -367,7 +367,7 @@ function spawnEnemy(context, time) {
         sprite: enemy,
         enemyId: 0,
         velocity: randomEnemyXVelocity(),
-        stateIndex: 0,
+        stateIndex: Math.floor (3 * Math.random()),
         getName: function() {
             return `Enemy #${this.enemyId}`;
         },
@@ -456,7 +456,7 @@ function update(time, delta) {
         if (isClose(enemy, PLAYER_STATE, ENEMY_ATTACK_RANGE_PIXELS)) {
             enemy.sprite.anims.play(`patient${enemy.stateIndex}_attack`, true);
             enemy.sprite.body.setVelocityX(0);
-            PLAYER_STATE.takeDamage(20);
+            PLAYER_STATE.takeDamage(1);
         }
         else {
             enemy.sprite.anims.play(`patient${enemy.stateIndex}_walk`, true);
