@@ -7,3 +7,10 @@ Using the following order, drag (one at a time) the sprites into [Leshy Tool](ht
 Download the new spritesheet and name it `skelly_spritesheet.png` in the parent directory. Replace the existing file.
 
 Set Leshy to output `JSON-TP-Array` and then save that file as `skelly_sprites.json` in the parent directory.
+
+## Resizing
+
+Locally, I resize the images using imagemagick's mogrify:
+
+`mogrify -resize 216x216 -quality 100 -path ./resized *.png`
+
