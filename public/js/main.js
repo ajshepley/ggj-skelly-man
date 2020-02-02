@@ -43,6 +43,9 @@ const WALK_TILE_BUFFER_IN_TILES = 1;
 const BACKGROUND_SIZE_IN_TILEs = MAP_HEIGHT_IN_TILES - (FLOOR_SIZE_IN_TILES + WALK_TILE_BUFFER_IN_TILES);
 
 function preload() {
+    // load background images
+    this.load.image('background1', 'assets/background1.png');
+    this.load.image('background2', 'assets/background2.png');
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
@@ -60,6 +63,10 @@ function preload() {
 }
 
 function create() {
+    // add background
+    this.add.image(1050, 350, 'background1');
+    this.add.image(3150, 350, 'background2');
+
     // load the map 
     map = this.make.tilemap({ key: 'map' });
 
@@ -89,6 +96,7 @@ function create() {
         key: 'walk',
         frames: this.anims.generateFrameNames('player', { prefix: 'walk', start: 1, end: 3, zeroPad: 2 }),
         frameRate: 9,
+        // The amout of times it will loop if the animations plays longer than available frames
         repeat: -1
     });
     // idle with only one frame, so repeat is not neaded
