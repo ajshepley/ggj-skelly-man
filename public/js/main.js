@@ -163,10 +163,12 @@ function update(time, delta) {
         } else if (cursors.left.isDown) {
             player.body.setVelocityX(-200);
             player.anims.play('walk', true); // walk left
+            player.setOrigin(1, player.originY); // left-aligned sprites, so we set the origin to the far right when flipping.
             player.flipX = true; // flip the sprite to the left
         } else if (cursors.right.isDown) {
             player.body.setVelocityX(200);
             player.anims.play('walk', true);
+            player.setOrigin(0.5, player.originY); // Reset the origin to the middle when the left-aligned sprite faces right.
             player.flipX = false; // use the original sprite looking to the right
         } else {
             player.body.setVelocityX(0);
