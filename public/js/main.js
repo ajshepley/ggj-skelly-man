@@ -444,6 +444,9 @@ var timePlayerWasAttacked = 0;
 // Only damage once per attack animation. 
 let shouldDamageForAttack = true;
 
+let shouldDamagePlayerForAttack = true;
+var deadTweenActive = false;
+
 function update(time, delta) {
     // set being attacked to false
     let nextFrame = Math.floor(time / (1_000 / 60));
@@ -473,6 +476,11 @@ function update(time, delta) {
 
     if (canPlayerMove()) {
         inputHandler(time);
+    } else if (playerIsDead() && !deadTweenActive) {
+        debugLog("Player is dead!");
+        player.body.setVelocityX(0);
+        player.body.setVelocityY(-220);
+        player.setCollideWorldBounds(false);
     }
     
     let deadEnemies = removeDeadEnemies();
@@ -591,7 +599,11 @@ function inputHandler(time) {
 }
 
 function canPlayerMove() {
-    return !isPlayerAttacking;
+    return !isPlayerAttacking && !playerIsDead();
+}
+
+function playerIsDead() {
+    return PLAYER_STATE.health <= 0;
 }
 
 function randomHexColor() {
