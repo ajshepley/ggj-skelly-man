@@ -35,6 +35,10 @@ var playerAttack = '';
 
 const ENABLE_DEBUG_LOGGING = true;
 
+const TILE_SIZE = 70; // 70 pixels
+const MAP_WIDTH_IN_TILES = 150;
+const MAP_HEIGHT_IN_TILES = 10;
+
 function preload() {
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
