@@ -14,3 +14,4 @@ Locally, I resize the images using imagemagick's mogrify:
 
 `mogrify -resize 216x216 -quality 100 -path ./resized *.png`
 
+For the patients, the resized sprite size is `235x162`.
