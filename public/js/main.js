@@ -338,6 +338,12 @@ function loadEnemyAnimations(context) {
     });
 }
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 let lastEnemySpawnTime = 0;
 function spawnEnemy(context, time) {
     let enemyCount = enemies.length;
@@ -367,7 +373,7 @@ function spawnEnemy(context, time) {
         sprite: enemy,
         enemyId: 0,
         velocity: randomEnemyXVelocity(),
-        stateIndex: Math.floor (3 * Math.random()),
+        stateIndex: getRandomInt(0, 2),
         getName: function() {
             return `Enemy #${this.enemyId}`;
         },
