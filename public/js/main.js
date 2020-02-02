@@ -185,7 +185,7 @@ const ENEMY_SPAWN_TIME_MILLIS = 3_000;
 const PLAYER_MOVE_SPEED = 200;
 const ENEMIES_HAVE_ENEMY_COLLISION = true;
 
-const PLAYER_ATTACK_RANGE_PIXLES = 120;
+const PLAYER_ATTACK_RANGE_PIXELS = 120;
 
 // Also use this range for triggering enemy attacks at this range.
 const ENEMY_ATTACK_RANGE_PIXELS = 80;
@@ -371,14 +371,14 @@ function spawnEnemy(context, time) {
             // Opposite of player, the enemies face left by default.
             return this.sprite.flipX ? DIRECTIONS.right : DIRECTIONS.left;
         },
-        takeDamage: function(amount, damageType) {
-            if (amount === undefined) {
-                var amount = 1;
+        takeDamage: function(damageType) {
+            if (!isPlayerAttackEffective(this.getState(), damageType)) {
+                return;
             }
 
-            this.stateIndex += amount;
+            this.stateIndex += 1;
 
-            debugLog(`Enemy #${this.enemyId} took ${amount} healing damage. New health: ${this.stateIndex} - ${this.getState()}`);
+            debugLog(`Enemy #${this.enemyId} took healing damage. New health: ${this.stateIndex} - ${this.getState()}`);
 
             if (this.stateIndex >= ENEMY_STATES.length) {
                  // Clamp to max enemy state size
@@ -402,6 +402,21 @@ function spawnEnemy(context, time) {
 
     enemies.push(enemyObject);
     enemyObject.enemyId = enemies.length - 1;
+}
+
+// Attack order is jab, uppercut, kick.
+// The opponent's state effects which attack you must use to deal further healing damage.
+function isPlayerAttackEffective(enemyHealthState, attackType) {
+    switch(enemyHealthState) {
+        case ENEMY_STATES[0]:
+            return attackType === PLAYER_DAMAGE_TYPES.MID_JAB;
+        case ENEMY_STATES[1]:
+            return attackType === PLAYER_DAMAGE_TYPES.UPPERCUT;
+        case ENEMY_STATES[2]:
+            return attackType === PLAYER_DAMAGE_TYPES.KICK;
+        default:
+            return false;
+    }
 }
 
 var currentFrame = 1;
@@ -445,6 +460,7 @@ function update(time, delta) {
 
         // Only deal damage once per attack. Also known as "active frames".
         if (shouldDamageForAttack) {
+            debugLog(`Damaging nearby enemies for attack: ${playerAttack}.`);
             damageNearbyEnemies();
             shouldDamageForAttack = false;
         }
@@ -459,15 +475,17 @@ function update(time, delta) {
     }
 }
 
-function damageNearbyEnemies() {
-    nearbyEnemies = enemies.filter(enemy => isClose(PLAYER_STATE, enemy));
+function damageNearbyEnemies(attackType) {
+    nearbyEnemies = enemies.filter(enemy => isClose(PLAYER_STATE, enemy, PLAYER_ATTACK_RANGE_PIXELS));
+    debugLog(`Nearby enemies are: ${nearbyEnemies}`);
     enemiesNearbyAndInFront = nearbyEnemies.filter(enemy => isInFront(PLAYER_STATE, enemy));
-    enemiesNearbyAndInFront.forEach(enemy => enemy.takeDamage());
+    debugLog(`Nearby and in front enemies are: ${enemiesNearbyAndInFront}`);
+    enemiesNearbyAndInFront.forEach(enemy => enemy.takeDamage(attackType));
 }
 
 function isClose(entity, otherEntity, range) {
     distance = Math.abs(entity.getX() - otherEntity.getX());
-    debugLog(`Distance between ${entity.getName()} and ${otherEntity.getName()} is ${distance}`);
+    debugLog(`Distance between ${entity.getName()} and ${otherEntity.getName()} is ${distance}.`);
     return distance <= range;
 }
 
@@ -481,9 +499,9 @@ function isInFront(entity, otherEntity) {
     if (Math.abs(distance) < PLAYER_ATTACK_DISTANCE_LENIENCY) {
         return true;
     } else if (distance >= 0) {
-        return entity.getDirection == DIRECTIONS.right;
+        return entity.getDirection === DIRECTIONS.right;
     } else if (distance < 0) {
-        return entity.getDirection == DIRECTIONS.left;
+        return entity.getDirection === DIRECTIONS.left;
     }
 }
 
