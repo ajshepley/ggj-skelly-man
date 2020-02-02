@@ -52,6 +52,7 @@ function preload() {
     this.load.image('background2', 'assets/background2.png');
     this.load.image('background3', 'assets/background3.png');
     this.load.image('gameOverImage', 'assets/gameOverImage.png');
+    this.load.image('gameWinImage', 'assets/gameWinImage.png');
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
