@@ -45,14 +45,15 @@ const MAP_HEIGHT_IN_TILES = 10;
 const FLOOR_SIZE_IN_TILES = 3;
 const WALK_TILE_BUFFER_IN_TILES = 1;
 const BACKGROUND_SIZE_IN_TILEs = MAP_HEIGHT_IN_TILES - (FLOOR_SIZE_IN_TILES + WALK_TILE_BUFFER_IN_TILES);
+const SKELLIES_SAVED_TO_WIN = 1;
 
 function preload() {
     // load background images
     this.load.image('background1', 'assets/background1.png');
     this.load.image('background2', 'assets/background2.png');
     this.load.image('background3', 'assets/background3.png');
-    this.load.image('gameOverImage', 'assets/gameOverImage.png');
-    this.load.image('gameWinImage', 'assets/gameWinImage.png');
+    this.load.image('gameOverImage', 'assets/death_fullscreen.png');
+    this.load.image('gameWinImage', 'assets/life_fullscreen.png');
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
@@ -184,6 +185,11 @@ function create() {
 function showGameOverImage(gameContext) {
     let x = Math.max(PLAYER_STATE.getX(), 695);
     gameContext.add.image(x, 350, 'gameOverImage');
+}
+
+function showGameWinImage(gameContext) {
+    let x = Math.max(PLAYER_STATE.getX(), 695);
+    gameContext.add.image(x, 350, 'gameWinImage');
 }
 
 // TODO: Move these constants to the top? Wherever they work for David.
@@ -510,6 +516,10 @@ function update(time, delta) {
     let deadEnemies = removeDeadEnemies();
     deadEnemies.forEach(enemy => enemy.sprite.destroy());
     skellymenSaved += deadEnemies.length;
+
+    if (skellymenSaved >= SKELLIES_SAVED_TO_WIN) {
+        showGameWinImage(this);
+    }
 
     if (isPlayerAttacking) {
         player.body.setVelocityX(0);
