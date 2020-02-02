@@ -26,7 +26,7 @@ let enemies = [];
 var cursors;
 var groundLayer;
 var text;
-var score = 0;
+var health = 0;
 let isKeyDown = {
     a: false,
     s: false,
@@ -490,7 +490,8 @@ function update(time, delta) {
         shouldDamageForAttack = true;
     }
 
-    score = PLAYER_STATE.health;
+    health = PLAYER_STATE.health;
+    text.setText(`Dr. Skelly's Bone Health: ${health}`);
 }
 
 function removeDeadEnemies() {
