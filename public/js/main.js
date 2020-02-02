@@ -570,7 +570,7 @@ function update(time, delta) {
 
     health = PLAYER_STATE.health;
     text.setText(`Dr. Skelly's Bone Health: ${health}`);
-    skellymenText.setText(`Skelly Men Saved: ${skellymenSaved}`);
+    skellymenText.setText(`Skelly Men Saved: ${skellymenSaved} out of ${SKELLIES_SAVED_TO_WIN}`);
 }
 
 function removeDeadEnemies() {
