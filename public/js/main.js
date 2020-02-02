@@ -175,6 +175,33 @@ const ENEMY_TEST_SPAWN_LOCATION = {
     Y: 375
 };
 
+const ENEMY_STATES = [
+    "0_noOrgans",
+    "1_heartAndLungs",
+    "2_eyes",
+    "3_intestines"
+];
+
+const ENEMY_DAMAGE_PER_HIT = 10;
+
+// The variable is constant but its members can change. Yavascript.
+const PLAYER_STATE = {
+    health: 100,
+    takeDamage: function(amount) {
+        if (amount === undefined) {
+            var amount = ENEMY_DAMAGE_PER_HIT;
+        }
+        health -= amount;
+
+        if (health <= 0) {
+            this.killPlayer;
+        }
+    },
+    killPlayer: function() {
+        // TODO: Fill in, call global function, reset game, game over, etc.
+    }
+};
+
 let lastEnemySpawnTime = 0;
 
 function loadEnemyAnimations(context) {
@@ -277,8 +304,24 @@ function spawnEnemy(context, time) {
     enemyObject = {
         sprite: enemy,
         velocity: randomEnemyXVelocity(),
-        state: 'noOrgans'
-    }
+        stateIndex: 0,
+        takeDamage: function(amount) {
+            if (amount === undefined) {
+                var amount = 1;
+            }
+            this.stateIndex += amount;
+            // Clamp to max enemy state size.
+            this.stateIndex = Math.min(ENEMY_STATES.length, this.stateIndex);
+        },
+        getState: function() {
+            // This should be unnecessary, but JS, so we'll be careful.
+            if (this.stateIndex < ENEMY_STATES.length) {
+                return ENEMY_STATES[this.stateIndex];
+            } else {
+                return ENEMY_STATES[ENEMY_STATES.length - 1];
+            }
+        }
+    };
 
     enemies.push(enemyObject);
 }
