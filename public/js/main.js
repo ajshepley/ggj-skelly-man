@@ -202,8 +202,6 @@ const PLAYER_STATE = {
     }
 };
 
-let lastEnemySpawnTime = 0;
-
 function loadEnemyAnimations(context) {
     context.anims.create({
         key: 'patient0_idle',
@@ -278,6 +276,7 @@ function loadEnemyAnimations(context) {
     });
 }
 
+let lastEnemySpawnTime = 0;
 function spawnEnemy(context, time) {
     let enemyCount = enemies.length;
     if (enemyCount >= ENEMY_SPAWN_COUNT_LIMIT) {
