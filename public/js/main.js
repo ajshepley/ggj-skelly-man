@@ -27,6 +27,9 @@ var cursors;
 var groundLayer;
 var text;
 var health = 0;
+var skellymenText;
+let skellymenSaved = 0;
+
 let isKeyDown = {
     a: false,
     s: false,
@@ -152,6 +155,13 @@ function create() {
     });
     // fix the text to the camera
     text.setScrollFactor(0);
+
+    // Skellymen Saved
+    skellymenText = this.add.text(20, 600, '0', {
+        fontSize: '20px',
+        fill: '#ffffff'
+    });
+    skellymenText.setScrollFactor(0);
 
     // Keyboard input listeners
     this.input.keyboard.on('keydown_A', function (event) {
@@ -402,6 +412,7 @@ function spawnEnemy(context, time) {
         },
         killEnemy: function() {
             debugLog(`Enemy #${this.enemyId} destroyed!`);
+            skellymenSaved += 1;
             // Stub. Do something here. Call global function?
         }
     };
