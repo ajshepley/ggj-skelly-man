@@ -308,9 +308,14 @@ function spawnEnemy(context, time) {
             if (amount === undefined) {
                 var amount = 1;
             }
+            
             this.stateIndex += amount;
-            // Clamp to max enemy state size.
-            this.stateIndex = Math.min(ENEMY_STATES.length, this.stateIndex);
+
+            if (this.stateIndex >= ENEMY_STATES.length) {
+                 // Clamp to max enemy state size
+                this.stateIndex = Math.min(ENEMY_STATES.length, this.stateIndex);
+                this.killEnemy();
+            }
         },
         getState: function() {
             // This should be unnecessary, but JS, so we'll be careful.
@@ -319,6 +324,9 @@ function spawnEnemy(context, time) {
             } else {
                 return ENEMY_STATES[ENEMY_STATES.length - 1];
             }
+        },
+        killEnemy: function() {
+            // Stub. Do something here. Call global function?
         }
     };
 
