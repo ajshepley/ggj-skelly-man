@@ -37,7 +37,7 @@ let isKeyDown = {
 };
 var playerAttack = '';
 
-const ENABLE_DEBUG_LOGGING = false;
+const ENABLE_DEBUG_LOGGING = true;
 
 const TILE_SIZE = 70; // 70 pixels
 const MAP_WIDTH_IN_TILES = 150;
@@ -412,7 +412,6 @@ function spawnEnemy(context, time) {
         },
         killEnemy: function() {
             debugLog(`Enemy #${this.enemyId} destroyed!`);
-            skellymenSaved += 1;
             // Stub. Do something here. Call global function?
         }
     };
@@ -471,6 +470,7 @@ function update(time, delta) {
     
     let deadEnemies = removeDeadEnemies();
     deadEnemies.forEach(enemy => enemy.sprite.destroy());
+    skellymenSaved += deadEnemies.length;
 
     if (isPlayerAttacking) {
         player.body.setVelocityX(0);
@@ -503,6 +503,7 @@ function update(time, delta) {
 
     health = PLAYER_STATE.health;
     text.setText(`Dr. Skelly's Bone Health: ${health}`);
+    skellymenText.setText(`Skelly Men Saved: ${skellymenSaved}`);
 }
 
 function removeDeadEnemies() {
@@ -522,7 +523,7 @@ function damageNearbyEnemies(attackType) {
 
 function isClose(entity, otherEntity, range) {
     distance = Math.abs(entity.getX() - otherEntity.getX());
-    debugLog(`Distance between ${entity.getName()} and ${otherEntity.getName()} is ${distance}.`);
+    // debugLog(`Distance between ${entity.getName()} and ${otherEntity.getName()} is ${distance}.`);
     return distance <= range;
 }
 
