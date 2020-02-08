@@ -51,8 +51,11 @@ const FLOOR_SIZE_IN_TILES = 3;
 const WALK_TILE_BUFFER_IN_TILES = 1;
 const BACKGROUND_SIZE_IN_TILEs = MAP_HEIGHT_IN_TILES - (FLOOR_SIZE_IN_TILES + WALK_TILE_BUFFER_IN_TILES);
 const ENEMIES_REELING_FRAMES = 30;
+const ENEMY_REELING_SPIN_SPEED = 4;
 const ENEMY_KNOCKBACK_VELOCITY = 95;
 const SKELLIES_SAVED_TO_WIN = 15;
+
+const ENEMY_CAN_BE_HIT_WHEN_REELING = false;
 
 function preload() {
     // load background images
@@ -194,7 +197,7 @@ function create() {
         isKeyDown.d = true;
     });
 
-    this.input.on('pointerdown', function(pointer){
+    this.input.on('pointerdown', function (pointer) {
         music.play();
     });
 }
@@ -266,20 +269,20 @@ const DIRECTIONS = {
 // The variable is constant but its members can change. Yavascript.
 const PLAYER_STATE = {
     health: 100,
-    getName: function() {
+    getName: function () {
         return "Dr. Skelly, M.D.";
     },
     // TODO: It would make sense to inline the Player object here instead.
-    getX: function() {
+    getX: function () {
         return player.x;
     },
-    getY: function() {
+    getY: function () {
         return player.y;
     },
-    getDirection: function() {
+    getDirection: function () {
         return player.flipX ? DIRECTIONS.left : DIRECTIONS.right;
     },
-    takeDamage: function(amount) {
+    takeDamage: function (amount) {
         if (amount === undefined) {
             var amount = ENEMY_DAMAGE_PER_HIT;
         }
@@ -292,7 +295,7 @@ const PLAYER_STATE = {
             this.killPlayer();
         }
     },
-    killPlayer: function() {
+    killPlayer: function () {
         // TODO: Fill in, call global function, reset game, game over, etc.
     }
 };
@@ -408,27 +411,30 @@ function spawnEnemy(context, time) {
         velocity: randomEnemyXVelocity(),
         stateIndex: getRandomInt(0, 2),
         reelingCountdown: 0,
-        getName: function() {
+        getName: function () {
             return `Enemy #${this.enemyId}`;
         },
-        getX: function() {
+        getX: function () {
             return this.sprite.x;
         },
-        getY: function() {
+        getY: function () {
             return this.sprite.y;
         },
-        getDirection: function() {
+        isReeling: function () {
+            return this.reelingCountdown > 0;
+        },
+        getDirection: function () {
             // Opposite of player, the enemies face left by default.
             return this.sprite.flipX ? DIRECTIONS.right : DIRECTIONS.left;
         },
-        takeDamage: function(damageType) {
+        takeDamage: function (damageType) {
             debugLog(`Checking if enemy #${this.enemyId} can take ${damageType} damage. Current state: ${this.getState()}`);
             if (this.stateIndex === 3) {
                 this.killEnemy();
                 return;
             }
 
-            if (!isPlayerAttackEffective(this.getState(), damageType)) {
+            if (!isPlayerAttackEffective(this.getState(), damageType) || this.reelingCountdown > 0 && !ENEMY_CAN_BE_HIT_WHEN_REELING) {
                 playAttackSound('punchMissed');
                 return;
             }
@@ -440,14 +446,14 @@ function spawnEnemy(context, time) {
 
             playAttackSound(playerAttack);
             if (this.stateIndex >= ENEMY_STATES.length) {
-                 // Clamp to max enemy state size
+                // Clamp to max enemy state size
                 this.stateIndex = Math.min(ENEMY_STATES.length, this.stateIndex);
                 this.killEnemy();
             }
-            
+
             this.setReelingVelocity();
         },
-        getState: function() {
+        getState: function () {
             // This should be unnecessary, but JS, so we'll be careful.
             if (this.stateIndex < ENEMY_STATES.length) {
                 return ENEMY_STATES[this.stateIndex];
@@ -455,13 +461,26 @@ function spawnEnemy(context, time) {
                 return ENEMY_STATES[ENEMY_STATES.length - 1];
             }
         },
-        fixedUpdate: function() {
+        fixedUpdate: function () {
             // Update once per frame.
-            this.reelingCountdown = Math.max(this.reelingCountdown - 1, 0);
-            this.setReelingVelocity();
+            if (this.isReeling()) {
+                this.reelingCountdown = Math.max(this.reelingCountdown - 1, 0);
+                this.setReelingAngle();
+                this.setReelingVelocity();
+            } else {
+                // Not reeling, set things to normal if necessary.
+                this.sprite.angle = 0;
+            }
         },
-        setReelingVelocity: function() {
-            if (this.reelingCountdown <= 0) {
+        setReelingAngle: function () {
+            if (this.getDirection() === DIRECTIONS.right) {
+                this.sprite.angle -= ENEMY_REELING_SPIN_SPEED;
+            } else {
+                this.sprite.angle += ENEMY_REELING_SPIN_SPEED;
+            }
+        },
+        setReelingVelocity: function () {
+            if (!this.isReeling()) {
                 this.sprite.body.setVelocityX(this.velocity);
             } else if (this.getDirection() === DIRECTIONS.right) {
                 this.sprite.body.setVelocityX(-ENEMY_KNOCKBACK_VELOCITY);
@@ -470,7 +489,7 @@ function spawnEnemy(context, time) {
                 this.sprite.body.setVelocityX(ENEMY_KNOCKBACK_VELOCITY);
             }
         },
-        killEnemy: function() {
+        killEnemy: function () {
             debugLog(`Enemy #${this.enemyId} destroyed!`);
             // Stub. Do something here. Call global function?
         }
@@ -483,7 +502,7 @@ function spawnEnemy(context, time) {
 // Attack order is jab, uppercut, kick.
 // The opponent's state effects which attack you must use to deal further healing damage.
 function isPlayerAttackEffective(enemyHealthState, attackType) {
-    switch(enemyHealthState) {
+    switch (enemyHealthState) {
         case ENEMY_STATES[0]:
             return attackType === PLAYER_DAMAGE_TYPES.MID_JAB;
         case ENEMY_STATES[1]:
@@ -522,7 +541,7 @@ function update(time, delta) {
     }
 
     enemies.forEach(enemy => {
-        if (isClose(enemy, PLAYER_STATE, ENEMY_ATTACK_RANGE_PIXELS)) {
+        if (isClose(enemy, PLAYER_STATE, ENEMY_ATTACK_RANGE_PIXELS) && !enemy.isReeling()) {
             enemy.sprite.anims.play(`patient${enemy.stateIndex}_attack`, true);
             enemy.sprite.body.setVelocityX(0);
             if (!isPlayerBeingAttacked) {
@@ -548,13 +567,13 @@ function update(time, delta) {
         player.setCollideWorldBounds(false);
 
         gameOverCounter++;
-        
+
         if (!gameOverScreenPresented && gameOverCounter > 180) {
             showGameOverImage(this);
             gameOverScreenPresented = true;
         }
     }
-    
+
     let deadEnemies = removeDeadEnemies();
     deadEnemies.forEach(enemy => enemy.sprite.destroy());
     skellymenSaved += deadEnemies.length;
@@ -626,7 +645,7 @@ function isClose(entity, otherEntity, range) {
 function isInFront(entity, otherEntity) {
     // Distance that otherEntity is further to the right than entity. 
     distance = otherEntity.getX() - entity.getX();
-    
+
     // Be lenient if they're on top of you.
     // If their distance is positive, they're to the right, so you must be facing right.
     // If it's negative, they're to the left, so you must be facing left.
