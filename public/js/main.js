@@ -50,6 +50,8 @@ const MAP_HEIGHT_IN_TILES = 10;
 const FLOOR_SIZE_IN_TILES = 3;
 const WALK_TILE_BUFFER_IN_TILES = 1;
 const BACKGROUND_SIZE_IN_TILEs = MAP_HEIGHT_IN_TILES - (FLOOR_SIZE_IN_TILES + WALK_TILE_BUFFER_IN_TILES);
+const ENEMIES_REELING_FRAMES = 30;
+const ENEMY_KNOCKBACK_VELOCITY = 95;
 const SKELLIES_SAVED_TO_WIN = 15;
 
 function preload() {
@@ -405,6 +407,7 @@ function spawnEnemy(context, time) {
         enemyId: 0,
         velocity: randomEnemyXVelocity(),
         stateIndex: getRandomInt(0, 2),
+        reelingCountdown: 0,
         getName: function() {
             return `Enemy #${this.enemyId}`;
         },
@@ -419,7 +422,7 @@ function spawnEnemy(context, time) {
             return this.sprite.flipX ? DIRECTIONS.right : DIRECTIONS.left;
         },
         takeDamage: function(damageType) {
-            debugLog(`Checking if enemy #${this.enemyId} can take ${damageType} damage. Current state: ${this.getState()}`); 
+            debugLog(`Checking if enemy #${this.enemyId} can take ${damageType} damage. Current state: ${this.getState()}`);
             if (this.stateIndex === 3) {
                 this.killEnemy();
                 return;
@@ -430,6 +433,7 @@ function spawnEnemy(context, time) {
                 return;
             }
 
+            this.reelingCountdown = 90;
             this.stateIndex += 1;
 
             debugLog(`Enemy #${this.enemyId} took healing damage. New health: ${this.stateIndex} - ${this.getState()}`);
@@ -440,6 +444,8 @@ function spawnEnemy(context, time) {
                 this.stateIndex = Math.min(ENEMY_STATES.length, this.stateIndex);
                 this.killEnemy();
             }
+            
+            this.setReelingVelocity();
         },
         getState: function() {
             // This should be unnecessary, but JS, so we'll be careful.
@@ -447,6 +453,21 @@ function spawnEnemy(context, time) {
                 return ENEMY_STATES[this.stateIndex];
             } else {
                 return ENEMY_STATES[ENEMY_STATES.length - 1];
+            }
+        },
+        fixedUpdate: function() {
+            // Update once per frame.
+            this.reelingCountdown = Math.max(this.reelingCountdown - 1, 0);
+            this.setReelingVelocity();
+        },
+        setReelingVelocity: function() {
+            if (this.reelingCountdown <= 0) {
+                this.sprite.body.setVelocityX(this.velocity);
+            } else if (this.getDirection() === DIRECTIONS.right) {
+                this.sprite.body.setVelocityX(-ENEMY_KNOCKBACK_VELOCITY);
+            } else {
+                // debugger
+                this.sprite.body.setVelocityX(ENEMY_KNOCKBACK_VELOCITY);
             }
         },
         killEnemy: function() {
@@ -514,6 +535,8 @@ function update(time, delta) {
             enemy.sprite.anims.play(`patient${enemy.stateIndex}_walk`, true);
             enemy.sprite.body.setVelocityX(enemy.velocity);
         }
+
+        enemy.fixedUpdate();
     });
 
     if (canPlayerMove()) {
