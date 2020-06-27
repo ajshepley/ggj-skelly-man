@@ -76,8 +76,6 @@ function preload() {
 }
 
 function create() {
-  Util.debugLog("test");
-
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(this, PHASER_GAME_CONFIG.width * 0.5, PHASER_GAME_CONFIG.height * 0.67, 80, 0x00ff00);
 
   BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, PHASER_GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
