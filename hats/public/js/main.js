@@ -30,11 +30,11 @@ export const PHASER_GAME_CONFIG = {
 const GAME_LOGIC_CONFIG = {
   // Lockout time before another input is accepted for a player.
   // Also used to determine how close P2 and P1 are to each other's inputs.
-  PLAYER_ACTION_DURATION_MILLIS: 300,
+  PLAYER_ACTION_DURATION_MILLIS: 500,
 
   // How far away can two player inputs be before we disregard them?
   // For now, this can be the same as the player action duration. We can increase difficulty by lowering this value.
-  PLAYER_ATTACK_WINDOW_MILLIS: 300
+  PLAYER_ATTACK_WINDOW_MILLIS: 500
 };
 
 const BOSS_CONFIG = {
@@ -179,11 +179,12 @@ function processInputs(time) {
   // Clear inputs if the last input was more than TIMEOUT seconds ago.
   if (inputStates.p1KeyDownTimestamp && time - inputStates.p1KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
     Util.debugLog(`Clearing p1 inputs. Last input was at ${inputStates.p1KeyDownTimestamp} and time is ${time}`);
-    inputStates.resetP1Inputs();
+    PLAYERS_STATE.resetP1Inputs();
   }
 
   if (inputStates.p2KeyDownTimestamp && time - inputStates.p2KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
-    inputStates.resetP2Inputs();
+    Util.debugLog(`Clearing p2 inputs. Last input was at ${inputStates.p1KeyDownTimestamp} and time is ${time}`);
+    PLAYERS_STATE.resetP2Inputs();
   }
 }
 
