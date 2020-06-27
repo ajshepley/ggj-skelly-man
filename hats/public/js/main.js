@@ -10,7 +10,7 @@ import { BossMeter } from './BossMeter.js';
 // Configs, constants and global states.
 // ----------------------------------------------------
 
-const GAME_CONFIG = {
+const PHASER_GAME_CONFIG = {
   type: Phaser.AUTO,
   width: 1600,
   height: 900,
@@ -35,7 +35,7 @@ const BOSS_CONFIG = {
 
 }
 
-const game = new Phaser.Game(GAME_CONFIG);
+const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
 const BATTLE_STATE = {
   playerAttackSyncMeter: null,
@@ -80,10 +80,10 @@ function preload() {
 function create() {
   Util.debugLog("test");
 
-  BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(this, GAME_CONFIG.width * 0.5, GAME_CONFIG.height * 0.67, 80, 0x00ff00);
+  BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(this, PHASER_GAME_CONFIG.width * 0.5, PHASER_GAME_CONFIG.height * 0.67, 80, 0x00ff00);
 
-  BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
-    GAME_CONFIG.height * 0.1, BOSS_CONFIG.bossMeterWidth, 50, 0xff0000);
+  BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, PHASER_GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
+    PHASER_GAME_CONFIG.height * 0.1, BOSS_CONFIG.bossMeterWidth, 50, 0xff0000);
 
   // add and play music, input, cursor keys, etc.
 
@@ -93,7 +93,7 @@ function create() {
 function update(time, delta) {
   let nextFrame = Math.floor(time / (1_000 / 60));
 
-  inputHandler(time);
+  processInputs(time);
 
   if (nextFrame < 100) {
     BATTLE_STATE.playerAttackSyncMeter.updateFill(nextFrame / 100);
@@ -103,7 +103,7 @@ function update(time, delta) {
   // set texts, etc.
 }
 
-function inputHandler(time) {
+function processInputs(time) {
 
 }
 
