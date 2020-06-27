@@ -1,3 +1,5 @@
+const ENABLE_DEBUG_LOGGING = true;
+
 export function debugLog(message) {
   if (ENABLE_DEBUG_LOGGING) {
       console.log(message);

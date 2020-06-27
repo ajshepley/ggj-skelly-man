@@ -34,6 +34,7 @@ function preload() {
 }
 
 function create() {
+  Util.debugLog("test");
   // add music
   // music = this.sound.add('music');
 
