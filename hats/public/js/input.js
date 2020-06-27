@@ -57,13 +57,13 @@ export function initInput(phaserGame, inputState) {
     }
 
     // We could shorten this by making P1_KEYS and P2_KEYS submembers of inputState, but it's not worth it.
-    if (!inputState.P1_LAST_KEY_DOWN && KEY_OWNER[key] == Owner.P1) {
+    if (!inputState.p1LastKeyDown && KEY_OWNER[key] == Owner.P1) {
       // https://www.w3schools.com/jsref/event_timestamp.asp
-      inputState.P1_LAST_KEY_DOWN = playerKey;
-      inputState.P1_KEY_DOWN_TIMESTAMP = event.timeStamp
-    } else if (!inputState.P2_LAST_KEY_DOWN && KEY_OWNER[key] == Owner.P2) {
-      inputState.P2_LAST_KEY_DOWN = playerKey;
-      inputState.P2_LAST_KEY_DOWN = playerKey;
+      inputState.p1LastKeyDown = playerKey;
+      inputState.p1KeyDownTimestamp = event.timeStamp;
+    } else if (!inputState.p2LastKeyDown && KEY_OWNER[key] == Owner.P2) {
+      inputState.p2LastKeyDown = playerKey;
+      inputState.p1KeyDownTimestamp = event.timeStamp;
     }
   });
 }

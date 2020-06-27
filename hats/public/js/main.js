@@ -7,7 +7,7 @@ import { BossMeter } from './BossMeter.js';
 
 
 // ----------------------------------------------------
-// Configs, constants and global states.
+// Configs and constants
 // ----------------------------------------------------
 
 const PHASER_GAME_CONFIG = {
@@ -33,6 +33,10 @@ const BOSS_CONFIG = {
   bossMeterWidth: 400,
 };
 
+// ----------------------------------------------------
+// Global States
+// ----------------------------------------------------
+
 const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
 const BATTLE_STATE = {
@@ -42,12 +46,13 @@ const BATTLE_STATE = {
 
 const PLAYERS_STATE = {
   health: 100,
+  lastSuccessfulAttackTimestamp: 0,
 
   PLAYERS_INPUT_STATES: {
-    P1_LAST_KEY_DOWN: null,
-    P2_LAST_KEY_DOWN: null,
-    P1_KEY_DOWN_TIMESTAMP: null,
-    P2_KEY_DOWN_TIMESTAMP: null
+    p1LastKeyDown: null,
+    p2LastKeyDown: null,
+    p1KeyDownTimestamp: 0,
+    p2KeyDownTimestamp: 0,
   },
 
   takeDamage: function (amount) {
@@ -100,5 +105,12 @@ function update(time, delta) {
 }
 
 function processInputs(time) {
+  const inputStates = PLAYERS_STATE.PLAYERS_INPUT_STATES;
 
+  // Check for a matching input first, before clearing. Allow users to get attacks in as late as possible.
+  if (inputStates.p1LastKeyDown) {
+
+  }
+
+  // Check timeouts and clear.
 }
