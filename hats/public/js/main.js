@@ -1,5 +1,9 @@
+"use strict";
+
 import * as Util from './util.js';
 import * as Input from './input.js';
+import { SyncMeter } from './SyncMeter.js';
+import { BossMeter } from './BossMeter.js';
 
 let config = {
   type: Phaser.AUTO,
@@ -49,8 +53,14 @@ function preload() {
   // this.load.audio('punch1', 'assets/punch1.mp3');
 }
 
+let syncMeter, bossMeter;
 function create() {
   Util.debugLog("test");
+
+  syncMeter = new SyncMeter(this, config.width * 0.5, config.height * 0.67, 80, 0x00ff00);
+  const bostMeterWidth = 400;
+  bossMeter = new BossMeter(this, config.width * 0.5 - bostMeterWidth * 0.5, config.height * 0.1, bostMeterWidth, 50, 0xff0000);
+
   // add music
   // music = this.sound.add('music');
 
@@ -112,6 +122,11 @@ function update(time, delta) {
   let nextFrame = Math.floor(time / (1_000 / 60));
 
   inputHandler(time);
+
+  if (nextFrame < 100) {
+    syncMeter.updateFill(nextFrame/100);
+    bossMeter.updateFill(1 - nextFrame/100);
+  }
 
   // text.setText(`Dr. Skelly's Bone Health: ${health}`);
   //   skellymenText.setText(`Skelly Men Saved: ${skellymenSaved} out of ${SKELLIES_SAVED_TO_WIN}`);
