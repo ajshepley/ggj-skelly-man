@@ -61,6 +61,8 @@ const PLAYERS_STATE = {
     p2LastKeyDown: null,
     p1KeyDownTimestamp: 0,
     p2KeyDownTimestamp: 0,
+    p1AnimationPlayed: false,
+    p2AnimationPlayed: false
   },
 
   takeDamage: function (amount) {
@@ -72,10 +74,20 @@ const PLAYERS_STATE = {
 
     this.health = 100;
     this.lastSuccessfulAttackTimestamp = 0;
+    this.resetP1Inputs();
+    this.resetP2Inputs();
+  },
+
+  resetP1Inputs: function() {
     this.PLAYERS_INPUT_STATES.p1LastKeyDown = null;
-    this.PLAYERS_INPUT_STATES.p2LastKeyDown = null;
     this.PLAYERS_INPUT_STATES.p1KeyDownTimestamp = 0;
+    this.PLAYERS_INPUT_STATES.p1AnimationPlayed = false;
+  },
+
+  resetP2Inputs: function() {
+    this.PLAYERS_INPUT_STATES.p2LastKeyDown = null;
     this.PLAYERS_INPUT_STATES.p2KeyDownTimestamp = 0;
+    this.PLAYERS_INPUT_STATES.p2AnimationPlayed = false;
   }
 };
 
@@ -103,7 +115,7 @@ function create() {
     PHASER_GAME_CONFIG.height * 0.67,
     80,
     0x00ff00);
-    
+
   BATTLE_STATE.bossAttackTimerMeter = new BossMeter(
     this,
     PHASER_GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
@@ -130,11 +142,19 @@ function update(time, delta) {
   // set texts, etc.
 }
 
+// TODO: Abstract segments to their own methods.
 function processInputs(time) {
   const inputStates = PLAYERS_STATE.PLAYERS_INPUT_STATES;
   const canAttack = time - PLAYERS_STATE.lastSuccessfulAttackTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS;
 
   // TODO: Make players strike pose and hold it.
+  if (inputStates.p1LastKeyDown && !inputStates.p1AnimationPlayed) {
+
+  }
+
+  if (inputStates.p2LastKeyDown && !inputStates.p2AnimationPlayed) {
+
+  }
 
   // Check for a matching input first, before clearing. Allow users to get attacks in as late as possible.
   if (inputStates.p1LastKeyDown && inputStates.p2LastKeyDown && canAttack) {
@@ -159,13 +179,11 @@ function processInputs(time) {
   // Clear inputs if the last input was more than TIMEOUT seconds ago.
   if (inputStates.p1KeyDownTimestamp && time - inputStates.p1KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
     Util.debugLog(`Clearing p1 inputs. Last input was at ${inputStates.p1KeyDownTimestamp} and time is ${time}`);
-    inputStates.p1LastKeyDown = null;
-    inputStates.p1KeyDownTimestamp = 0;
+    inputStates.resetP1Inputs();
   }
 
   if (inputStates.p2KeyDownTimestamp && time - inputStates.p2KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
-    inputStates.p2LastKeyDown = null;
-    inputStates.p2KeyDownTimestamp = 0;
+    inputStates.resetP2Inputs();
   }
 }
 
