@@ -4,22 +4,26 @@ import * as Util from './util.js';
 import * as Input from './input.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
-
+import { tutorialScene } from './scenes/tutorial.js';
 
 // ----------------------------------------------------
 // Configs and constants
 // ----------------------------------------------------
 
-const PHASER_GAME_CONFIG = {
+export const PHASER_GAME_CONFIG = {
   type: Phaser.AUTO,
   width: 1600,
   height: 900,
-  scene: {
-    key: 'main',
-    preload: preload,
-    create: create,
-    update: update
-  }
+  title: 'Rhythm Game',
+  scene: [
+    tutorialScene,
+    {
+      key: 'main',
+      preload: preload,
+      create: create,
+      update: update
+    }
+  ]
 };
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
@@ -41,7 +45,7 @@ const BOSS_CONFIG = {
 // Global States
 // ----------------------------------------------------
 
-const game = new Phaser.Game(PHASER_GAME_CONFIG);
+export const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
 const BATTLE_STATE = {
   playerAttackSyncMeter: null,
@@ -93,10 +97,20 @@ function preload() {
 }
 
 function create() {
-  BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(this, PHASER_GAME_CONFIG.width * 0.5, PHASER_GAME_CONFIG.height * 0.67, 80, 0x00ff00);
-
-  BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, PHASER_GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
-    PHASER_GAME_CONFIG.height * 0.1, BOSS_CONFIG.bossMeterWidth, 50, 0xff0000);
+  BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
+    this,
+    PHASER_GAME_CONFIG.width * 0.5,
+    PHASER_GAME_CONFIG.height * 0.67,
+    80,
+    0x00ff00);
+    
+  BATTLE_STATE.bossAttackTimerMeter = new BossMeter(
+    this,
+    PHASER_GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
+    PHASER_GAME_CONFIG.height * 0.1,
+    BOSS_CONFIG.bossMeterWidth,
+    50,
+    0xff0000);
 
   // add and play music, input, cursor keys, etc.
 
