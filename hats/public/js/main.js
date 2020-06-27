@@ -33,8 +33,20 @@ function preload() {
   // this.load.audio('punch1', 'assets/punch1.mp3');
 }
 
+let circle;
 function create() {
   Util.debugLog("test");
+
+  /** Sync Meter **/
+  circle = this.add.graphics();
+
+  const ring = this.add.graphics();
+  const color = 0xff0000;
+  const thickness = 4;
+  const alpha = 1;
+  ring.lineStyle(thickness, color, alpha);
+  ring.strokeCircle(config.width/2, config.height/2, 100);
+
   // add music
   // music = this.sound.add('music');
 
@@ -92,6 +104,12 @@ function create() {
 
 function update(time, delta) {
   let nextFrame = Math.floor(time / (1_000 / 60));
+
+  if (nextFrame < 100) {
+    circle.clear();
+    circle.fillStyle(0xff0000, 1);
+    circle.fillCircle(config.width/2, config.height/2, nextFrame);
+  }
 
   // inputHandler(time);
 
