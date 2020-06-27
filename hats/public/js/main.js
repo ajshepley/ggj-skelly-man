@@ -5,7 +5,7 @@ import * as Input from './input.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
 
-let config = {
+const GAME_CONFIG = {
   type: Phaser.AUTO,
   width: 1600,
   height: 900,
@@ -25,7 +25,12 @@ let config = {
   }
 };
 
-const game = new Phaser.Game(config);
+const game = new Phaser.Game(GAME_CONFIG);
+
+const BATTLE_STATE = {
+  playerAttackSyncMeter: null,
+  bossAttackTimerMeter: null
+}
 
 const PLAYERS_STATE = {
   health: 100,
@@ -39,8 +44,20 @@ const PLAYERS_STATE = {
 
   takeDamage: function (amount) {
     // TODO
+  },
+
+  reset: function () {
+
   }
 };
+
+const BOSS_STATE = {
+  bossHealth: 100,
+
+  reset: function () {
+    // TODO
+  }
+}
 
 function preload() {
   // background images
@@ -53,13 +70,13 @@ function preload() {
   // this.load.audio('punch1', 'assets/punch1.mp3');
 }
 
-let syncMeter, bossMeter;
 function create() {
   Util.debugLog("test");
 
-  syncMeter = new SyncMeter(this, config.width * 0.5, config.height * 0.67, 80, 0x00ff00);
-  const bostMeterWidth = 400;
-  bossMeter = new BossMeter(this, config.width * 0.5 - bostMeterWidth * 0.5, config.height * 0.1, bostMeterWidth, 50, 0xff0000);
+  BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(this, GAME_CONFIG.width * 0.5, GAME_CONFIG.height * 0.67, 80, 0x00ff00);
+
+  const bossMeterWidth = 400;
+  BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, GAME_CONFIG.width * 0.5 - bossMeterWidth * 0.5, GAME_CONFIG.height * 0.1, bossMeterWidth, 50, 0xff0000);
 
   // add music
   // music = this.sound.add('music');
@@ -124,8 +141,8 @@ function update(time, delta) {
   inputHandler(time);
 
   if (nextFrame < 100) {
-    syncMeter.updateFill(nextFrame/100);
-    bossMeter.updateFill(1 - nextFrame/100);
+    BATTLE_STATE.playerAttackSyncMeter.updateFill(nextFrame/100);
+    BATTLE_STATE.bossAttackTimerMeter.updateFill(1 - nextFrame/100);
   }
 
   // text.setText(`Dr. Skelly's Bone Health: ${health}`);
