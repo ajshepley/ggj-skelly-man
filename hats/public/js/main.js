@@ -26,7 +26,11 @@ const PHASER_GAME_CONFIG = {
 const GAME_LOGIC_CONFIG = {
   // Lockout time before another input is accepted for a player.
   // Also used to determine how close P2 and P1 are to each other's inputs.
-  PLAYER_ACTION_DURATION_MILLIS: 300
+  PLAYER_ACTION_DURATION_MILLIS: 300,
+
+  // How far away can two player inputs be before we disregard them?
+  // For now, this can be the same as the player action duration. We can increase difficulty by lowering this value.
+  PLAYER_ATTACK_WINDOW_MILLIS: 300
 };
 
 const BOSS_CONFIG = {
@@ -61,6 +65,13 @@ const PLAYERS_STATE = {
 
   reset: function () {
     // TODO:
+
+    this.health = 100;
+    this.lastSuccessfulAttackTimestamp = 0;
+    this.PLAYERS_INPUT_STATES.p1LastKeyDown = null;
+    this.PLAYERS_INPUT_STATES.p2LastKeyDown = null;
+    this.PLAYERS_INPUT_STATES.p1KeyDownTimestamp = 0;
+    this.PLAYERS_INPUT_STATES.p2KeyDownTimestamp = 0;
   }
 };
 
@@ -69,6 +80,7 @@ const BOSS_STATE = {
 
   reset: function () {
     // TODO
+    this.bossHealth = 100;
   }
 };
 
@@ -106,11 +118,49 @@ function update(time, delta) {
 
 function processInputs(time) {
   const inputStates = PLAYERS_STATE.PLAYERS_INPUT_STATES;
+  const canAttack = time - PLAYERS_STATE.lastSuccessfulAttackTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS;
+
+  // TODO: Make players strike pose and hold it.
 
   // Check for a matching input first, before clearing. Allow users to get attacks in as late as possible.
-  if (inputStates.p1LastKeyDown) {
+  if (inputStates.p1LastKeyDown && inputStates.p2LastKeyDown && canAttack) {
 
+    let isSameInput = inputStates.p1LastKeyDown === inputStates.p2LastKeyDown;
+
+    if (isSameInput) {
+      // In short, damage done to the enemy is scaled based on how close the inputs were together.
+      const timeBetweenAttackInputs = Math.abs(inputStates.p1KeyDownTimestamp - inputStates.p2KeyDownTimestamp);
+      const damageReduction = Math.abs(GAME_LOGIC_CONFIG.PLAYER_ATTACK_WINDOW_MILLIS - timeBetweenAttackInputs);
+
+      Util.debugLog(`Same input detected. Time between attacks: ${timeBetweenAttackInputs}. Damage reduction: ${damageReduction}.`);
+
+      damageBoss(inputStates.p1LastKeyDown, damageReduction);
+
+      PLAYERS_STATE.lastSuccessfulAttackTimestamp = time;
+    } else {
+      // TODO: Whiff or move cancellation logic.
+    }
   }
 
-  // Check timeouts and clear.
+  // Clear inputs if the last input was more than TIMEOUT seconds ago.
+  if (inputStates.p1KeyDownTimestamp && time - inputStates.p1KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
+    Util.debugLog(`Clearing p1 inputs. Last input was at ${inputStates.p1KeyDownTimestamp} and time is ${time}`);
+    inputStates.p1LastKeyDown = null;
+    inputStates.p1KeyDownTimestamp = 0;
+  }
+
+  if (inputStates.p2KeyDownTimestamp && time - inputStates.p2KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
+    inputStates.p2LastKeyDown = null;
+    inputStates.p2KeyDownTimestamp = 0;
+  }
+}
+
+// ----------------------------------------------------
+// Game logic for boss and any special player logic.
+// ----------------------------------------------------
+
+function damageBoss(attackMoveDirection, damageReductionMillis) {
+  // TODO: damage boss based on how well the players did, queue or cue animations, do attack based on the move direction or damage.
+
+  Util.debugLog(`Damaging enemy boss with direction: ${attackMoveDirection} and timing difference of ${damageReductionMillis} millis.`);
 }

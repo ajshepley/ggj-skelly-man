@@ -50,7 +50,7 @@ export function initInput(phaserGame, inputState) {
     const key = event.key;
     const playerKey = PLAYER_INPUTS[key];
 
-    Util.debugLog(`Key down: ${key}, which corresponds to: ${playerKey}.`);
+    Util.debugLog(`Key down: ${key}, which corresponds to: ${playerKey}. Timestamp: ${event.timeStamp}.`);
 
     if (!playerKey) {
       return;
@@ -63,7 +63,7 @@ export function initInput(phaserGame, inputState) {
       inputState.p1KeyDownTimestamp = event.timeStamp;
     } else if (!inputState.p2LastKeyDown && KEY_OWNER[key] == Owner.P2) {
       inputState.p2LastKeyDown = playerKey;
-      inputState.p1KeyDownTimestamp = event.timeStamp;
+      inputState.p2KeyDownTimestamp = event.timeStamp;
     }
   });
 }
