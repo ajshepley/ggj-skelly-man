@@ -2,6 +2,7 @@
 
 import * as Util from './util.js';
 import { SyncMeter } from './SyncMeter.js';
+import { BossMeter } from './BossMeter.js';
 
 var config = {
   type: Phaser.AUTO,
@@ -36,11 +37,13 @@ function preload() {
   // this.load.audio('punch1', 'assets/punch1.mp3');
 }
 
-let syncMeter;
+let syncMeter, bossMeter;
 function create() {
   Util.debugLog("test");
 
-  syncMeter = new SyncMeter(this, config.width * 0.5, config.height * 0.67, 80, 0xff0000);
+  syncMeter = new SyncMeter(this, config.width * 0.5, config.height * 0.67, 80, 0x00ff00);
+  const bostMeterWidth = 400;
+  bossMeter = new BossMeter(this, config.width * 0.5 - bostMeterWidth * 0.5, config.height * 0.1, bostMeterWidth, 50, 0xff0000);
 
   // add music
   // music = this.sound.add('music');
@@ -102,6 +105,7 @@ function update(time, delta) {
 
   if (nextFrame < 100) {
     syncMeter.updateFill(nextFrame/100);
+    bossMeter.updateFill(1 - nextFrame/100);
   }
 
   // inputHandler(time);
