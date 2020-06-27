@@ -1,6 +1,7 @@
 import * as Util from './util.js';
+import * as Input from './input.js';
 
-var config = {
+let config = {
   type: Phaser.AUTO,
   width: 1600,
   height: 900,
@@ -21,6 +22,21 @@ var config = {
 };
 
 const game = new Phaser.Game(config);
+
+const PLAYERS_STATE = {
+  health: 100,
+
+  PLAYERS_INPUT_STATES: {
+    P1_LAST_KEY_DOWN: null,
+    P2_LAST_KEY_DOWN: null,
+    P1_KEY_DOWN_TIMESTAMP: null,
+    P2_KEY_DOWN_TIMESTAMP: null
+  },
+
+  takeDamage: function (amount) {
+    // TODO
+  }
+};
 
 function preload() {
   // background images
@@ -80,6 +96,8 @@ function create() {
   // this.input.on('pointerdown', function (pointer) {
   //   music.play();
   // });
+
+  Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
 }
 
 // function loadEnemyAnimations(context) {
@@ -93,13 +111,16 @@ function create() {
 function update(time, delta) {
   let nextFrame = Math.floor(time / (1_000 / 60));
 
-  // inputHandler(time);
+  inputHandler(time);
 
   // text.setText(`Dr. Skelly's Bone Health: ${health}`);
   //   skellymenText.setText(`Skelly Men Saved: ${skellymenSaved} out of ${SKELLIES_SAVED_TO_WIN}`);
 }
 
 function inputHandler(time) {
+
+
+
   // if (isKeyDown.a || isKeyDown.s || isKeyDown.d) {
   //     if (isKeyDown.a) {
   //         playerAttack = PLAYER_DAMAGE_TYPES.MID_JAB;
