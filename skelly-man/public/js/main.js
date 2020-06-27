@@ -66,7 +66,7 @@ function preload() {
     this.load.image('gameWinImage', 'assets/life_fullscreen.png');
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
-    // tiles in spritesheet 
+    // tiles in spritesheet
     this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 70, frameHeight: 70 });
     // player animations
     this.load.atlas('player', 'assets/skelly_spritesheet.png', 'assets/skelly_sprites.json');
@@ -101,7 +101,7 @@ function create() {
     this.add.image(3150, 350, 'background2');
     this.add.image(5250, 350, 'background3');
 
-    // load the map 
+    // load the map
     map = this.make.tilemap({ key: 'map' });
 
     // tiles for the ground layer
@@ -115,14 +115,14 @@ function create() {
     this.physics.world.bounds.width = groundLayer.width;
     this.physics.world.bounds.height = groundLayer.height;
 
-    // create the player sprite    
+    // create the player sprite
     player = this.physics.add.sprite(PLAYER_SPRITE_SIZE.X, PLAYER_SPRITE_SIZE.Y, 'player');
     player.x = PLAYER_SPAWN_LOCATION.X;
     player.y = PLAYER_SPAWN_LOCATION.Y;
     player.body.setSize(player.width - 195, player.height);
     player.setCollideWorldBounds(true); // don't go out of the map
 
-    // player will collide with the level tiles 
+    // player will collide with the level tiles
     this.physics.add.collider(groundLayer, player);
 
     // player walk animation
@@ -168,7 +168,7 @@ function create() {
     // make the camera follow the player
     this.cameras.main.startFollow(player);
 
-    // set background color, so the sky is not black    
+    // set background color, so the sky is not black
     this.cameras.main.setBackgroundColor('#ccccff');
 
     // this text will show the score
@@ -187,17 +187,17 @@ function create() {
     skellymenText.setScrollFactor(0);
 
     // Keyboard input listeners
-    this.input.keyboard.on('keydown_A', function (event) {
+    this.input.keyboard.on('keydown_A', function(event) {
         isKeyDown.a = true;
     });
-    this.input.keyboard.on('keydown_S', function (event) {
+    this.input.keyboard.on('keydown_S', function(event) {
         isKeyDown.s = true;
     });
-    this.input.keyboard.on('keydown_D', function (event) {
+    this.input.keyboard.on('keydown_D', function(event) {
         isKeyDown.d = true;
     });
 
-    this.input.on('pointerdown', function (pointer) {
+    this.input.on('pointerdown', function(pointer) {
         music.play();
     });
 }
@@ -224,7 +224,7 @@ const ENEMY_SPRITE_SIZE = {
 }
 
 const ENEMY_SPAWN_COUNT_LIMIT = 5;
-const ENEMY_SPAWN_TIME_MILLIS = 3_000;
+const ENEMY_SPAWN_TIME_MILLIS = 3 _000;
 const PLAYER_MOVE_SPEED = 200;
 const ENEMIES_HAVE_ENEMY_COLLISION = true;
 
@@ -269,20 +269,20 @@ const DIRECTIONS = {
 // The variable is constant but its members can change. Yavascript.
 const PLAYER_STATE = {
     health: 100,
-    getName: function () {
+    getName: function() {
         return "Dr. Skelly, M.D.";
     },
     // TODO: It would make sense to inline the Player object here instead.
-    getX: function () {
+    getX: function() {
         return player.x;
     },
-    getY: function () {
+    getY: function() {
         return player.y;
     },
-    getDirection: function () {
+    getDirection: function() {
         return player.flipX ? DIRECTIONS.left : DIRECTIONS.right;
     },
-    takeDamage: function (amount) {
+    takeDamage: function(amount) {
         if (amount === undefined) {
             var amount = ENEMY_DAMAGE_PER_HIT;
         }
@@ -295,7 +295,7 @@ const PLAYER_STATE = {
             this.killPlayer();
         }
     },
-    killPlayer: function () {
+    killPlayer: function() {
         // TODO: Fill in, call global function, reset game, game over, etc.
     }
 };
@@ -381,6 +381,7 @@ function getRandomInt(min, max) {
 }
 
 let lastEnemySpawnTime = 0;
+
 function spawnEnemy(context, time) {
     let enemyCount = enemies.length;
     if (enemyCount >= ENEMY_SPAWN_COUNT_LIMIT) {
@@ -411,23 +412,23 @@ function spawnEnemy(context, time) {
         velocity: randomEnemyXVelocity(),
         stateIndex: getRandomInt(0, 2),
         reelingCountdown: 0,
-        getName: function () {
+        getName: function() {
             return `Enemy #${this.enemyId}`;
         },
-        getX: function () {
+        getX: function() {
             return this.sprite.x;
         },
-        getY: function () {
+        getY: function() {
             return this.sprite.y;
         },
-        isReeling: function () {
+        isReeling: function() {
             return this.reelingCountdown > 0;
         },
-        getDirection: function () {
+        getDirection: function() {
             // Opposite of player, the enemies face left by default.
             return this.sprite.flipX ? DIRECTIONS.right : DIRECTIONS.left;
         },
-        takeDamage: function (damageType) {
+        takeDamage: function(damageType) {
             debugLog(`Checking if enemy #${this.enemyId} can take ${damageType} damage. Current state: ${this.getState()}`);
             if (this.stateIndex === 3) {
                 this.killEnemy();
@@ -453,7 +454,7 @@ function spawnEnemy(context, time) {
 
             this.setReelingVelocity();
         },
-        getState: function () {
+        getState: function() {
             // This should be unnecessary, but JS, so we'll be careful.
             if (this.stateIndex < ENEMY_STATES.length) {
                 return ENEMY_STATES[this.stateIndex];
@@ -461,7 +462,7 @@ function spawnEnemy(context, time) {
                 return ENEMY_STATES[ENEMY_STATES.length - 1];
             }
         },
-        fixedUpdate: function () {
+        fixedUpdate: function() {
             // Update once per frame.
             if (this.isReeling()) {
                 this.reelingCountdown = Math.max(this.reelingCountdown - 1, 0);
@@ -472,14 +473,14 @@ function spawnEnemy(context, time) {
                 this.sprite.angle = 0;
             }
         },
-        setReelingAngle: function () {
+        setReelingAngle: function() {
             if (this.getDirection() === DIRECTIONS.right) {
                 this.sprite.angle -= ENEMY_REELING_SPIN_SPEED;
             } else {
                 this.sprite.angle += ENEMY_REELING_SPIN_SPEED;
             }
         },
-        setReelingVelocity: function () {
+        setReelingVelocity: function() {
             if (!this.isReeling()) {
                 this.sprite.body.setVelocityX(this.velocity);
             } else if (this.getDirection() === DIRECTIONS.right) {
@@ -489,7 +490,7 @@ function spawnEnemy(context, time) {
                 this.sprite.body.setVelocityX(ENEMY_KNOCKBACK_VELOCITY);
             }
         },
-        killEnemy: function () {
+        killEnemy: function() {
             debugLog(`Enemy #${this.enemyId} destroyed!`);
             // Stub. Do something here. Call global function?
         }
@@ -520,7 +521,7 @@ var timePlayerStartedAttack = 0;
 var isPlayerBeingAttacked = false;
 var timePlayerWasAttacked = 0;
 
-// Only damage once per attack animation. 
+// Only damage once per attack animation.
 let shouldDamageForAttack = true;
 
 let shouldDamagePlayerForAttack = true;
@@ -531,7 +532,7 @@ var gameOverCounter = 0;
 
 function update(time, delta) {
     // set being attacked to false
-    let nextFrame = Math.floor(time / (1_000 / 60));
+    let nextFrame = Math.floor(time / (1 _000 / 60));
     if (currentFrame < nextFrame) {
         currentFrame = nextFrame;
     }
@@ -549,8 +550,7 @@ function update(time, delta) {
                 PLAYER_STATE.takeDamage(ENEMY_DAMAGE_PER_HIT)
             }
             isPlayerBeingAttacked = true;
-        }
-        else {
+        } else {
             enemy.sprite.anims.play(`patient${enemy.stateIndex}_walk`, true);
             enemy.sprite.body.setVelocityX(enemy.velocity);
         }
@@ -587,11 +587,9 @@ function update(time, delta) {
 
         if (playerAttack === PLAYER_DAMAGE_TYPES.MID_JAB) {
             player.anims.play(PLAYER_DAMAGE_TYPES.MID_JAB, true);
-        }
-        else if (playerAttack === PLAYER_DAMAGE_TYPES.KICK) {
+        } else if (playerAttack === PLAYER_DAMAGE_TYPES.KICK) {
             player.anims.play(PLAYER_DAMAGE_TYPES.KICK, true);
-        }
-        else if (playerAttack === PLAYER_DAMAGE_TYPES.UPPERCUT) {
+        } else if (playerAttack === PLAYER_DAMAGE_TYPES.UPPERCUT) {
             player.anims.play(PLAYER_DAMAGE_TYPES.UPPERCUT, true);
         }
 
@@ -602,7 +600,7 @@ function update(time, delta) {
             shouldDamageForAttack = false;
         }
 
-        if (time - timePlayerStartedAttack > 1_000 / 3) {
+        if (time - timePlayerStartedAttack > 1 _000 / 3) {
             isPlayerAttacking = false;
             shouldDamageForAttack = true
         }
@@ -611,7 +609,7 @@ function update(time, delta) {
         shouldDamageForAttack = true;
     }
 
-    if (isPlayerBeingAttacked && ((time - timePlayerWasAttacked) >= 1_000)) {
+    if (isPlayerBeingAttacked && ((time - timePlayerWasAttacked) >= 1 _000)) {
         isPlayerBeingAttacked = false;
     }
 
@@ -643,7 +641,7 @@ function isClose(entity, otherEntity, range) {
 
 // Is Entity facing otherEntity.
 function isInFront(entity, otherEntity) {
-    // Distance that otherEntity is further to the right than entity. 
+    // Distance that otherEntity is further to the right than entity.
     distance = otherEntity.getX() - entity.getX();
 
     // Be lenient if they're on top of you.
@@ -663,31 +661,26 @@ function inputHandler(time) {
         if (isKeyDown.a) {
             playerAttack = PLAYER_DAMAGE_TYPES.MID_JAB;
             isKeyDown.a = false;
-        }
-        else if (isKeyDown.s) {
+        } else if (isKeyDown.s) {
             playerAttack = PLAYER_DAMAGE_TYPES.UPPERCUT;
             isKeyDown.s = false;
-        }
-        else if (isKeyDown.d) {
+        } else if (isKeyDown.d) {
             playerAttack = PLAYER_DAMAGE_TYPES.KICK;
             isKeyDown.d = false;
         }
         isPlayerAttacking = true;
         timePlayerStartedAttack = time;
-    }
-    else if (cursors.left.isDown) {
+    } else if (cursors.left.isDown) {
         player.body.setVelocityX(-PLAYER_MOVE_SPEED);
         player.anims.play('walk', true); // walk left
         player.setOrigin(1, player.originY); // left-aligned sprites, so we set the origin to the far right when flipping.
         player.flipX = true; // flip the sprite to the left
-    }
-    else if (cursors.right.isDown) {
+    } else if (cursors.right.isDown) {
         player.body.setVelocityX(PLAYER_MOVE_SPEED);
         player.anims.play('walk', true);
         player.setOrigin(0.5, player.originY); // Reset the origin to the middle when the left-aligned sprite faces right.
         player.flipX = false; // use the original sprite looking to the right
-    }
-    else {
+    } else {
         player.body.setVelocityX(0);
         player.anims.play('idle', true);
     }
