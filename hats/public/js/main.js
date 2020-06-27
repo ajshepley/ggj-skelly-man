@@ -5,25 +5,35 @@ import * as Input from './input.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
 
+
+// ----------------------------------------------------
+// Configs, constants and global states.
+// ----------------------------------------------------
+
 const GAME_CONFIG = {
   type: Phaser.AUTO,
   width: 1600,
   height: 900,
   physics: {
     // Unneeded?
-      default: 'arcade',
-      arcade: {
-          gravity: { y: 500 },
-          debug: false
-      }
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 500 },
+      debug: false
+    }
   },
   scene: {
-      key: 'main',
-      preload: preload,
-      create: create,
-      update: update
+    key: 'main',
+    preload: preload,
+    create: create,
+    update: update
   }
 };
+
+const BOSS_CONFIG = {
+  bossMeterWidth: 400,
+
+}
 
 const game = new Phaser.Game(GAME_CONFIG);
 
@@ -47,7 +57,7 @@ const PLAYERS_STATE = {
   },
 
   reset: function () {
-
+    // TODO:
   }
 };
 
@@ -58,6 +68,11 @@ const BOSS_STATE = {
     // TODO
   }
 }
+
+
+// ----------------------------------------------------
+// Phaser logic functions, game loop and tick.
+// ----------------------------------------------------
 
 function preload() {
   // background images
@@ -75,8 +90,8 @@ function create() {
 
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(this, GAME_CONFIG.width * 0.5, GAME_CONFIG.height * 0.67, 80, 0x00ff00);
 
-  const bossMeterWidth = 400;
-  BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, GAME_CONFIG.width * 0.5 - bossMeterWidth * 0.5, GAME_CONFIG.height * 0.1, bossMeterWidth, 50, 0xff0000);
+  BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
+    GAME_CONFIG.height * 0.1, BOSS_CONFIG.bossMeterWidth, 50, 0xff0000);
 
   // add music
   // music = this.sound.add('music');
@@ -141,8 +156,8 @@ function update(time, delta) {
   inputHandler(time);
 
   if (nextFrame < 100) {
-    BATTLE_STATE.playerAttackSyncMeter.updateFill(nextFrame/100);
-    BATTLE_STATE.bossAttackTimerMeter.updateFill(1 - nextFrame/100);
+    BATTLE_STATE.playerAttackSyncMeter.updateFill(nextFrame / 100);
+    BATTLE_STATE.bossAttackTimerMeter.updateFill(1 - nextFrame / 100);
   }
 
   // text.setText(`Dr. Skelly's Bone Health: ${health}`);
@@ -150,8 +165,6 @@ function update(time, delta) {
 }
 
 function inputHandler(time) {
-
-
 
   // if (isKeyDown.a || isKeyDown.s || isKeyDown.d) {
   //     if (isKeyDown.a) {
