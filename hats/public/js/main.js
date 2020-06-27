@@ -4,29 +4,33 @@ import * as Util from './util.js';
 import * as Input from './input.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
-
+import { tutorialScene } from './scenes/tutorial.js';
 
 // ----------------------------------------------------
 // Configs, constants and global states.
 // ----------------------------------------------------
 
-const GAME_CONFIG = {
+export const GAME_CONFIG = {
   type: Phaser.AUTO,
   width: 1600,
   height: 900,
-  scene: {
-    key: 'main',
-    preload: preload,
-    create: create,
-    update: update
-  }
+  title: 'Rhythm Game',
+  scene: [
+    tutorialScene,
+    {
+      key: 'main',
+      preload: preload,
+      create: create,
+      update: update
+    }
+  ]
 };
 
 const BOSS_CONFIG = {
   bossMeterWidth: 400,
 }
 
-const game = new Phaser.Game(GAME_CONFIG);
+export const game = new Phaser.Game(GAME_CONFIG);
 
 const BATTLE_STATE = {
   playerAttackSyncMeter: null,
@@ -69,8 +73,6 @@ function preload() {
 }
 
 function create() {
-  Util.debugLog("test");
-
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(this, GAME_CONFIG.width * 0.5, GAME_CONFIG.height * 0.67, 80, 0x00ff00);
 
   BATTLE_STATE.bossAttackTimerMeter = new BossMeter(this, GAME_CONFIG.width * 0.5 - BOSS_CONFIG.bossMeterWidth * 0.5,
