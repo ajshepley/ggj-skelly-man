@@ -14,14 +14,6 @@ const PHASER_GAME_CONFIG = {
   type: Phaser.AUTO,
   width: 1600,
   height: 900,
-  physics: {
-    // Unneeded?
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 500 },
-      debug: false
-    }
-  },
   scene: {
     key: 'main',
     preload: preload,
@@ -39,7 +31,6 @@ const GAME_LOGIC_CONFIG = {
 
 const BOSS_CONFIG = {
   bossMeterWidth: 400,
-
 };
 
 const game = new Phaser.Game(PHASER_GAME_CONFIG);
@@ -113,5 +104,3 @@ function update(time, delta) {
 function processInputs(time) {
 
 }
-
-
