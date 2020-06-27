@@ -30,17 +30,24 @@ const PHASER_GAME_CONFIG = {
   }
 };
 
+// Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
+const GAME_LOGIC_CONFIG = {
+  // Lockout time before another input is accepted for a player.
+  // Also used to determine how close P2 and P1 are to each other's inputs.
+  PLAYER_ACTION_DURATION_MILLIS: 300
+};
+
 const BOSS_CONFIG = {
   bossMeterWidth: 400,
 
-}
+};
 
 const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
 const BATTLE_STATE = {
   playerAttackSyncMeter: null,
   bossAttackTimerMeter: null
-}
+};
 
 const PLAYERS_STATE = {
   health: 100,
@@ -67,7 +74,7 @@ const BOSS_STATE = {
   reset: function () {
     // TODO
   }
-}
+};
 
 // ----------------------------------------------------
 // Phaser logic functions, game loop and tick.
