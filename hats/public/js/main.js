@@ -1,3 +1,5 @@
+import * as Util from './util.js';
+
 var config = {
   type: Phaser.AUTO,
   width: 1600,
@@ -131,14 +133,4 @@ function inputHandler(time) {
   // }
 }
 
-function debugLog(message) {
-  if (ENABLE_DEBUG_LOGGING) {
-      console.log(message);
-  }
-}
 
-function randomHexColor() {
-  let FFFFFF = 16777215;
-  let DDDDDD = 14540253;
-  return '0x' + Math.floor((FFFFFF - DDDDDD) * Math.random() + DDDDDD).toString(16);
-}
