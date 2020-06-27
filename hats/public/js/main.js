@@ -1,4 +1,7 @@
+"use strict";
+
 import * as Util from './util.js';
+import { SyncMeter } from './SyncMeter.js';
 
 var config = {
   type: Phaser.AUTO,
@@ -33,19 +36,11 @@ function preload() {
   // this.load.audio('punch1', 'assets/punch1.mp3');
 }
 
-let circle;
+let syncMeter;
 function create() {
   Util.debugLog("test");
 
-  /** Sync Meter **/
-  circle = this.add.graphics();
-
-  const ring = this.add.graphics();
-  const color = 0xff0000;
-  const thickness = 4;
-  const alpha = 1;
-  ring.lineStyle(thickness, color, alpha);
-  ring.strokeCircle(config.width/2, config.height/2, 100);
+  syncMeter = new SyncMeter(this, config.width * 0.5, config.height * 0.67, 80, 0xff0000);
 
   // add music
   // music = this.sound.add('music');
@@ -106,9 +101,7 @@ function update(time, delta) {
   let nextFrame = Math.floor(time / (1_000 / 60));
 
   if (nextFrame < 100) {
-    circle.clear();
-    circle.fillStyle(0xff0000, 1);
-    circle.fillCircle(config.width/2, config.height/2, nextFrame);
+    syncMeter.updateFill(nextFrame/100);
   }
 
   // inputHandler(time);
