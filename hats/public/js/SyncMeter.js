@@ -19,7 +19,7 @@ export class SyncMeter {
   updateFill(percentage) {
     this.fill.clear();
 
-    const fillAlpha = Math.max(0.3, percentage - 0.08);
+    const fillAlpha = Math.max(0.3, percentage - 0.02);
     this.fill.fillStyle(this.color, fillAlpha);
     this.fill.fillCircle(this.x, this.y, percentage * this.radius);
   }
