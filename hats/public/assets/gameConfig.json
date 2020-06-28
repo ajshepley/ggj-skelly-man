@@ -33,6 +33,7 @@
     },
     {
       "type": "mainScene",
+      "musicPath": "assets/Damiano_Baldoni_-_Dance_of_Souls.mp3",
       "gameLogicConfig": {
         "allowSameDirectionAttacks": false,
         "bossAttackBarGrowthTimeMillis": 7500,
@@ -57,6 +58,7 @@
     },
     {
       "type": "mainScene",
+      "musicPath": "assets/Damiano_Baldoni_-_Dance_of_Souls.mp3",
       "gameLogicConfig": {
         "allowSameDirectionAttacks": false,
         "bossAttackBarGrowthTimeMillis": 5000,

@@ -143,8 +143,7 @@ mainScene.preload = function () {
   this.load.image('balcony', 'assets/balcony.png');
   this.load.image('auras', 'assets/auras.png');
   this.load.image('fireball', 'assets/fireball.png');
-
-  this.load.audio('battle_music', 'assets/Damiano_Baldoni_-_Dance_of_Souls.mp3');
+  this.load.audio('battle_music', GAME_CONFIG.stages[LEVEL_INDEX].musicPath);
 }
 
 mainScene.create = function () {
