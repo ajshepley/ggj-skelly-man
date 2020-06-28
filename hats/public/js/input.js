@@ -69,3 +69,19 @@ export function initInput(phaserGame, inputState) {
     }
   });
 }
+
+export function arePlayerInputsTheSame(leftPlayerInputKey, rightPlayerInputKey) {
+  // These are the same, but for our purposes, they're not the sameAndUseful.
+  if (!leftPlayerInputKey || !rightPlayerInputKey) {
+    return false;
+  }
+
+  // Left player pointing left = same pose as right player pointing right.
+  if (leftPlayerInputKey === INPUT_DIRECTIONS.LEFT) {
+    return rightPlayerInputKey === INPUT_DIRECTIONS.RIGHT;
+  } else if (leftPlayerInputKey === INPUT_DIRECTIONS.RIGHT) {
+    return rightPlayerInputKey === INPUT_DIRECTIONS.LEFT;
+  } else {
+    return leftPlayerInputKey === rightPlayerInputKey;
+  }
+}

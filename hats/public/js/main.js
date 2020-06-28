@@ -243,7 +243,7 @@ function processInputs(time) {
   // Check for a matching input first, before clearing. Allow users to get attacks in as late as possible.
   if (inputStates.p1LastKeyDown && inputStates.p2LastKeyDown && canAttack) {
 
-    let isSameInput = inputStates.p1LastKeyDown === inputStates.p2LastKeyDown;
+    let isSameInput = Input.arePlayerInputsTheSame(inputStates.p1LastKeyDown, inputStates.p2LastKeyDown);
 
     if (isSameInput) {
       // In short, damage done to the enemy is scaled based on how close the inputs were together.
