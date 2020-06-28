@@ -165,6 +165,9 @@ mainScene.create = function () {
 }
 
 function addImages(phaserScene) {
+  if (LEVEL_INDEX > 1) {
+    return;
+  }
   // Background
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'background');
   // Monster
@@ -187,6 +190,9 @@ function addImages(phaserScene) {
 }
 
 function createCharacter(phaser, sprite, position, prefix) {
+  if (LEVEL_INDEX > 1) {
+    return;
+  }
   SPRITES[sprite] = phaser.add.sprite(position, PHASER_GAME_CONFIG.height * 0.67, `${prefix}character`);
 
   Animation.createCharacterAnimations(phaser, prefix);
