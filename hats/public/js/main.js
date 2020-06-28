@@ -14,10 +14,11 @@ import { tutorialScene } from './scenes/tutorial.js';
 
 let PHASER_GAME_CONFIG = null;
 let GAME_CONFIG = null;
+let LEVEL_INDEX = 0;
+
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 let GAME_LOGIC_CONFIG = null;
 let BOSS_CONFIG = null;
-let LEVEL_INDEX = 0;
 
 // ----------------------------------------------------
 // Global States
@@ -127,22 +128,6 @@ mainScene.init = function (data) {
   BOSS_CONFIG = GAME_CONFIG.stages[LEVEL_INDEX].bossConfig;
 }
 
-function resetConfigs() {
-  PHASER_GAME_CONFIG = null;
-  GAME_LOGIC_CONFIG = null;
-  BOSS_CONFIG = null;
-  LEVEL_INDEX = 0;
-}
-
-// Called when the state shuts down, e.g. when transitioning to another state.
-mainScene.shutdown = function () {
-  BATTLE_STATE.reset();
-  BOSS_STATE.reset();
-  PLAYERS_STATE.reset();
-  ANIMATION_QUEUE.reset();
-  resetConfigs();
-}
-
 mainScene.preload = function () {
   // this.loadImage, loadAtlas, loadAudio
   this.load.atlas('left_character', 'assets/left_character.png', 'assets/left_character.json');
@@ -226,6 +211,23 @@ mainScene.update = function (time, delta) {
   // set texts, etc.
 }
 
+// Called when the state shuts down, e.g. when transitioning to another state.
+mainScene.shutdown = function () {
+  BATTLE_STATE.reset();
+  BOSS_STATE.reset();
+  PLAYERS_STATE.reset();
+  ANIMATION_QUEUE.reset();
+  resetConfigs();
+}
+
+function resetConfigs() {
+  GAME_CONFIG = null;
+  PHASER_GAME_CONFIG = null;
+  GAME_LOGIC_CONFIG = null;
+  BOSS_CONFIG = null;
+  LEVEL_INDEX = 0;
+}
+
 // ----------------------------------------------------
 // Game logic for boss and any special player logic.
 //
@@ -238,18 +240,12 @@ function processInputs(time) {
   const canAttack = time - BATTLE_STATE.lastSuccessfulPlayerAttackTimestamp > GAME_LOGIC_CONFIG.playerActionDurationMillis;
 
   if (inputStates.p1LastKeyDown && !inputStates.p1AnimationPlayed) {
-    // TODO: Make player1 strike pose and hold it.
-    // You may want to set something like PLAYERS_STATE.needToAnimatedP1DanceMove = true, then use that in the update() method to do the animation,
-    // to keep the animation render out of this game logic method.
-
     ANIMATION_QUEUE.addAnimation(() => SPRITES.PLAYER_ONE.play(PLAYER_ONE_INPUT_ANIMATION_MAP[inputStates.p1LastKeyDown], true));
-
     inputStates.p1AnimationPlayed = true
   }
 
   if (inputStates.p2LastKeyDown && !inputStates.p2AnimationPlayed) {
     ANIMATION_QUEUE.addAnimation(() => SPRITES.PLAYER_TWO.play(PLAYER_TWO_INPUT_ANIMATION_MAP[inputStates.p2LastKeyDown], true));
-
     inputStates.p2AnimationPlayed = true;
   }
 
