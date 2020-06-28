@@ -342,12 +342,13 @@ function updateGame(time, delta, currentFrameNumber) {
   }
 
   // Check boss first, be lenient on players.
-  if (BOSS_STATE.bossHealth === 0) {
+  if (BOSS_STATE.bossHealth <= 0) {
     // TODO: Player beat boss, play boss death, pause inputs, victory music, then load next tutorial scene
-    // this.scene.start(levelData.nextLevelSceneName, currentGameAndLevelData());
+
+    loadNewStage();
   }
 
-  if (PLAYERS_STATE.health === 0) {
+  if (PLAYERS_STATE.health <= 0) {
     // TODO: Players have lost. Transition to game over screen.
     // Can scenes do a transition animation? Fadeout / RPG-style checkerboard?
     // this.scene.start(levelData.gameOverSceneName, currentGameData());
