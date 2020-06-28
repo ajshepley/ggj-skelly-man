@@ -3,10 +3,12 @@
     {
       "type": "interstitial",
       "imageKey": "interstitial",
-      "imagePath": "assets/level_0_tutorial.png"
+      "imagePath": "assets/level_0_tutorial.png",
+      "musicPath": "assets/Daniel_Birch_-_06_-_In_Pursuit_Of_Silence.mp3"
     },
     {
       "type": "mainScene",
+      "musicPath": "assets/Damiano_Baldoni_-_Dance_of_Souls.mp3",
       "gameLogicConfig": {
         "allowSameDirectionAttacks": false,
         "bossAttackBarGrowthTimeMillis": 10000,
@@ -31,6 +33,7 @@
     },
     {
       "type": "mainScene",
+      "musicPath": "assets/Damiano_Baldoni_-_Dance_of_Souls.mp3",
       "gameLogicConfig": {
         "allowSameDirectionAttacks": false,
         "bossAttackBarGrowthTimeMillis": 7500,
@@ -55,6 +58,7 @@
     },
     {
       "type": "mainScene",
+      "musicPath": "assets/Damiano_Baldoni_-_Dance_of_Souls.mp3",
       "gameLogicConfig": {
         "allowSameDirectionAttacks": false,
         "bossAttackBarGrowthTimeMillis": 5000,
