@@ -151,11 +151,11 @@ function shutdown() {
 
 function preload() {
   // this.loadImage, loadAtlas, loadAudio
-  this.load.atlas('character', '../assets/character.png', '../assets/character.json');
+  this.load.atlas('character', './assets/character.png', './assets/character.json');
 
-  this.load.image('background', '../assets/background.png');
-  this.load.image('monster', '../assets/monster.png');
-  this.load.image('balcony', '../assets/balcony.png');
+  this.load.image('background', './assets/background.png');
+  this.load.image('monster', './assets/monster.png');
+  this.load.image('balcony', './assets/balcony.png');
 }
 
 function create() {
@@ -188,7 +188,7 @@ function create() {
   Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
 
   // Character animations
-  const character = this.add.sprite(PHASER_GAME_CONFIG.width * 0.75, PHASER_GAME_CONFIG.height * 0.7, 'character');
+  const character = this.add.sprite(PHASER_GAME_CONFIG.width * 0.76, PHASER_GAME_CONFIG.height * 0.67, 'character');
 
   this.anims.create({
     key: 'idle',
