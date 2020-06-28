@@ -15,7 +15,6 @@ import { monsterDamagedAnimation } from './manualAnimations/monsterDamaged.js';
 let PHASER_GAME_CONFIG = null;
 let GAME_CONFIG = null;
 let LEVEL_INDEX = 0;
-let CURRENT_LEVEL_CONFIG = null;
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 let GAME_LOGIC_CONFIG = null;
@@ -87,7 +86,6 @@ const PLAYERS_STATE = {
 const BOSS_STATE = {
   health: 100,
   reset: function () {
-    // TODO
     this.health = 100;
   }
 };
@@ -216,7 +214,7 @@ mainScene.update = function (time, delta) {
 function loadNewStage() {
   const levelNameToLoad = GAME_CONFIG.stages[LEVEL_INDEX + 1].type;
   Util.debugLog(`Loading level ${LEVEL_INDEX + 1} of type ${levelNameToLoad}.`);
-  this.scene.start(levelNameToLoad, { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: LEVEL_INDEX + 1, config: GAME_CONFIG });
+  mainScene.scene.start(levelNameToLoad, { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: LEVEL_INDEX + 1, config: GAME_CONFIG });
 }
 
 // Called when the state shuts down, e.g. when transitioning to another state.

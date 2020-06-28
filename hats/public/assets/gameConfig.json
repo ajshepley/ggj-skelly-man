@@ -17,7 +17,7 @@
         "renderBossBarEveryNFrames": 30,
         "percentRingGrowthPerSyncedDanceMove": 20,
         "fullRingShrinkTimeMillis": 20000,
-        "damagePerFullRing": 20
+        "damagePerFullRing": 100
       },
       "bossConfig": {
         "bossMeterWidth": 400,
