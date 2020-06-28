@@ -307,7 +307,7 @@ function updateGame(time, delta, currentFrameNumber) {
     BATTLE_STATE.playerAttackProgressPercent = 0;
   }
 
-  if (BOSS_STATE.bossAttackProgressPercent >= 1) {
+  if (BATTLE_STATE.bossAttackProgressPercent >= 1) {
     // TODO: Do damage to players, do any player reeling animations
 
     BATTLE_STATE.bossAttackProgressPercent = 0;
