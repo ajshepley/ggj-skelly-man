@@ -21,12 +21,9 @@ export const PHASER_GAME_CONFIG = {
     mainScene
   ],
   physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 500 },
-      debug: false
-    }
-  }
+      default: 'arcade',
+      arcade: { debug: false }
+  },
 };
 
 export const game = new Phaser.Game(PHASER_GAME_CONFIG);
