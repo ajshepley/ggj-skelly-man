@@ -20,7 +20,8 @@
         "damagePerFullRing": 20
       },
       "bossConfig": {
-        "bossMeterWidth": 400
+        "bossMeterWidth": 400,
+        "damagePerFullMeter": 20
       }
     }
   ]

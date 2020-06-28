@@ -85,10 +85,10 @@ const PLAYERS_STATE = {
 };
 
 const BOSS_STATE = {
-  bossHealth: 100,
+  health: 100,
   reset: function () {
     // TODO
-    this.bossHealth = 100;
+    this.health = 100;
   }
 };
 
@@ -321,21 +321,24 @@ function updateGame(time, delta, currentFrameNumber) {
   growBossAttackMeter();
 
   if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
-    // TODO: Do damage to boss
-
     // White flash animation on boss
     ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation(SPRITES, currentFrameNumber));
 
+    BOSS_STATE.health -= GAME_LOGIC_CONFIG.damagePerFullRing;
+
+    // Interrupt boss's attack, restart player attack circle
+    BATTLE_STATE.bossAttackProgressPercent = 0;
     BATTLE_STATE.playerAttackProgressPercent = 0;
 
-    // Interrupt boss's attack
-    BATTLE_STATE.bossAttackProgressPercent = 0;
+    Util.debugLog(`Players attacked for ${GAME_LOGIC_CONFIG.damagePerFullRing} damage! Boss health is now ${BOSS_STATE.health}.`);
   }
 
   if (BATTLE_STATE.bossAttackProgressPercent >= 1) {
     // TODO: Do damage to players, do any player reeling animations
-
+    PLAYERS_STATE.health -= BOSS_CONFIG.damagePerFullMeter;
     BATTLE_STATE.bossAttackProgressPercent = 0;
+
+    Util.debugLog(`Boss attacked for ${BOSS_CONFIG.damagePerFullMeter} damage! Player health is now ${PLAYERS_STATE.health}.`);
   }
 
   // Check boss first, be lenient on players.

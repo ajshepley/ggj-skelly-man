@@ -44,5 +44,6 @@ const GAME_LOGIC_CONFIG = {
 
 const BOSS_CONFIG = {
   bossMeterWidth: 400,
+  damagePerFullRing: 20
 };
 
