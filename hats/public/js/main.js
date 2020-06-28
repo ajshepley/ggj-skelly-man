@@ -267,6 +267,12 @@ function update(time, delta) {
   // set texts, etc.
 }
 
+// ----------------------------------------------------
+// Game logic for boss and any special player logic.
+//
+// Do not call `thing.play()` and other animation methods here - enqueue them in the ANIMATION_QUEUE if possible.
+// ----------------------------------------------------
+
 // TODO: Abstract segments to their own methods.
 function processInputs(time) {
   const inputStates = PLAYERS_STATE.PLAYERS_INPUT_STATES;
@@ -325,10 +331,6 @@ function processInputs(time) {
     PLAYERS_STATE.resetP2Inputs();
   }
 }
-
-// ----------------------------------------------------
-// Game logic for boss and any special player logic.
-// ----------------------------------------------------
 
 // Direction of attack and how close the players were to being in sync (1.0 === players pressed at same millisecond)
 function growDamageRing(attackMoveDirection, playerSyncPercentage) {
