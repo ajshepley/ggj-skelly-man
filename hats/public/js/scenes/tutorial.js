@@ -6,6 +6,11 @@ const SCENE_OBJECTS = {
   BOX: null,
 }
 
+tutorialScene.init = function(data) {
+  // TODO: Pull the scene config data - monster screen picture before fight, or end game screen - from data.
+  // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
+}
+
 tutorialScene.create = function() {
   // Placeholder graphics
   SCENE_OBJECTS.BOX = this.add.graphics();
@@ -18,6 +23,8 @@ tutorialScene.create = function() {
 tutorialScene.update = function() {
   // Go to next scene on click
   if (game.input.activePointer.isDown) {
+    // TODO: Add initial config data to start call.
+    // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
     this.scene.start('main');
   }
 }

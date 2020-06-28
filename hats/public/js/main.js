@@ -30,11 +30,11 @@ export const PHASER_GAME_CONFIG = {
 const GAME_LOGIC_CONFIG = {
   // Lockout time before another input is accepted for a player.
   // Also used to determine how close P2 and P1 are to each other's inputs.
-  PLAYER_ACTION_DURATION_MILLIS: 500,
+  PLAYER_ACTION_DURATION_MILLIS: 900,
 
   // How far away can two player inputs be before we disregard them?
   // For now, this can be the same as the player action duration. We can increase difficulty by lowering this value.
-  PLAYER_ATTACK_WINDOW_MILLIS: 500
+  PLAYER_ATTACK_WINDOW_MILLIS: 900
 };
 
 const BOSS_CONFIG = {
@@ -103,6 +103,12 @@ const BOSS_STATE = {
 // ----------------------------------------------------
 // Phaser logic functions, game loop and tick.
 // ----------------------------------------------------
+
+// Init is called first, by `this.scene.start('main', data);`
+function init(data) {
+  // TODO: Pull the scene config data - which enemy are we fighting/level/player data? from data.
+  // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
+}
 
 function preload() {
   // this.loadImage, loadAtlas, loadAudio
