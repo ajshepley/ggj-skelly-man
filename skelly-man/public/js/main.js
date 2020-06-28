@@ -532,7 +532,7 @@ var gameOverCounter = 0;
 
 function update(time, delta) {
     // set being attacked to false
-    let nextFrame = Math.floor(time / (1 _000 / 60));
+    let nextFrame = Math.floor(time / (1_000 / 60));
     if (currentFrame < nextFrame) {
         currentFrame = nextFrame;
     }
@@ -600,7 +600,7 @@ function update(time, delta) {
             shouldDamageForAttack = false;
         }
 
-        if (time - timePlayerStartedAttack > 1 _000 / 3) {
+        if (time - timePlayerStartedAttack > 1_000 / 3) {
             isPlayerAttacking = false;
             shouldDamageForAttack = true
         }
@@ -609,7 +609,7 @@ function update(time, delta) {
         shouldDamageForAttack = true;
     }
 
-    if (isPlayerBeingAttacked && ((time - timePlayerWasAttacked) >= 1 _000)) {
+    if (isPlayerBeingAttacked && ((time - timePlayerWasAttacked) >= 1_000)) {
         isPlayerBeingAttacked = false;
     }
 
