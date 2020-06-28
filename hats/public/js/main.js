@@ -6,7 +6,6 @@ import * as Animation from './animation.js';
 import * as AnimationQueue from './animationQueue.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
-import { tutorialScene } from './scenes/tutorial.js';
 
 // ----------------------------------------------------
 // Configs and constants - configure in gameConfig.json, configInfo.js and boot.js
@@ -15,6 +14,7 @@ import { tutorialScene } from './scenes/tutorial.js';
 let PHASER_GAME_CONFIG = null;
 let GAME_CONFIG = null;
 let LEVEL_INDEX = 0;
+let CURRENT_LEVEL_CONFIG = null;
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 let GAME_LOGIC_CONFIG = null;
