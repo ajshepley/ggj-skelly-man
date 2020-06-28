@@ -192,7 +192,7 @@ function processInputs(time) {
 
       Util.debugLog(`Same input detected. Time between attacks: ${timeBetweenAttackInputs}. Sync percent: ${syncPercentage}.`);
 
-      damageBoss(inputStates.p1LastKeyDown, syncPercentage);
+      growDamageRing(inputStates.p1LastKeyDown, syncPercentage);
 
       PLAYERS_STATE.lastSuccessfulAttackTimestamp = time;
     } else {
@@ -217,8 +217,7 @@ function processInputs(time) {
 // ----------------------------------------------------
 
 // Direction of attack and how close the players were to being in sync (1.0 === players pressed at same millisecond)
-function damageBoss(attackMoveDirection, playerSyncPercentage) {
-  // TODO: damage boss based on how well the players did, queue or cue animations, do attack based on the move direction or damage.
-
+function growDamageRing(attackMoveDirection, playerSyncPercentage) {
+  // TODO: grow the damage ring based on how well the players synced.
   Util.debugLog(`Damaging enemy boss with direction: ${attackMoveDirection} and timing difference of ${playerSyncPercentage} millis.`);
 }
