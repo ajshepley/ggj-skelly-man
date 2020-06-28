@@ -14,10 +14,11 @@ import { tutorialScene } from './scenes/tutorial.js';
 
 let PHASER_GAME_CONFIG = null;
 let GAME_CONFIG = null;
+let LEVEL_INDEX = 0;
+
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 let GAME_LOGIC_CONFIG = null;
 let BOSS_CONFIG = null;
-let LEVEL_INDEX = 0;
 
 // ----------------------------------------------------
 // Global States
