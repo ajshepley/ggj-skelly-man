@@ -27,11 +27,11 @@ export const PHASER_GAME_CONFIG = {
     }
   ],
   physics: {
-      default: 'arcade',
-      arcade: {
-          gravity: { y: 500 },
-          debug: false
-      }
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 500 },
+      debug: false
+    }
   }
 };
 
@@ -79,7 +79,7 @@ const BATTLE_STATE = {
   // Progress percent towards the ring being filled. Out of 1.
   playerAttackProgressPercent: 0,
 
-  reset: function() {
+  reset: function () {
     this.playerAttackSyncMeter = null;
     this.bossAttackTimerMeter = null;
     this.playerAttackProgress = 0;
@@ -110,13 +110,13 @@ const PLAYERS_STATE = {
     this.resetP2Inputs();
   },
 
-  resetP1Inputs: function() {
+  resetP1Inputs: function () {
     this.PLAYERS_INPUT_STATES.p1LastKeyDown = null;
     this.PLAYERS_INPUT_STATES.p1KeyDownTimestamp = 0;
     this.PLAYERS_INPUT_STATES.p1AnimationPlayed = false;
   },
 
-  resetP2Inputs: function() {
+  resetP2Inputs: function () {
     this.PLAYERS_INPUT_STATES.p2LastKeyDown = null;
     this.PLAYERS_INPUT_STATES.p2KeyDownTimestamp = 0;
     this.PLAYERS_INPUT_STATES.p2AnimationPlayed = false;
@@ -160,11 +160,11 @@ function preload() {
 
 function create() {
   // Background
-  this.add.image(PHASER_GAME_CONFIG.width/2, PHASER_GAME_CONFIG.height/2, 'background');
+  this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'background');
   // Monster
-  this.add.image(PHASER_GAME_CONFIG.width/2, PHASER_GAME_CONFIG.height/2, 'monster');
+  this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
   // Balcony
-  this.add.image(PHASER_GAME_CONFIG.width/2, PHASER_GAME_CONFIG.height/2, 'balcony');
+  this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'balcony');
 
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
     this,
@@ -196,22 +196,22 @@ function create() {
     frameRate: 6,
     repeat: -1
   });
-  
+
   character.play('idle', true);
 }
 
 function update(time, delta) {
   let currentFrameNumber = Math.floor(time / (1_000 / 60));
 
-  processInputs(time);
+  // Engine/logic update.
+  updateGame(time, delta, currentFrameNumber);
 
+  // Render updates.
   if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_CIRCLE_EVERY_N_FRAMES === 0) {
     Util.debugLog(`Player attack progress: ${BATTLE_STATE.playerAttackProgressPercent}`);
     BATTLE_STATE.playerAttackSyncMeter.updateFill(BATTLE_STATE.playerAttackProgressPercent);
     BATTLE_STATE.bossAttackTimerMeter.updateFill(currentFrameNumber / 100);
   }
-
-  decreaseDamageRingOnTick();
   // set texts, etc.
 }
 
@@ -278,3 +278,10 @@ function decreaseDamageRingOnTick() {
   const normalizedDecreaseAmount = ringDecreaseAmountPerFrame / 100;
   BATTLE_STATE.playerAttackProgressPercent = Math.max(BATTLE_STATE.playerAttackProgressPercent - normalizedDecreaseAmount, 0);
 }
+
+// Main game logic update method.
+function updateGame(time, delta, currentFrameNumber) {
+  processInputs(time);
+  decreaseDamageRingOnTick();
+}
+
