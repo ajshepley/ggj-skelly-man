@@ -135,7 +135,8 @@ function create() {
     PHASER_GAME_CONFIG.width * 0.5,
     PHASER_GAME_CONFIG.height * 0.67,
     80,
-    0x00ff00);
+    0x00ff00)
+  ;
 
   BATTLE_STATE.bossAttackTimerMeter = new BossMeter(
     this,
@@ -143,7 +144,8 @@ function create() {
     PHASER_GAME_CONFIG.height * 0.1,
     BOSS_CONFIG.bossMeterWidth,
     50,
-    0xff0000);
+    0xff0000
+  );
 
   // add and play music, input, cursor keys, etc.
 
