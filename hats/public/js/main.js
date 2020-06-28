@@ -140,6 +140,25 @@ const BOSS_STATE = {
   }
 };
 
+const SPRITES = {
+  PLAYER_ONE: null,
+  PLAYER_TWO: null
+}
+
+const PLAYER_ONE_INPUT_ANIMATION_MAP = {
+  left: "right",
+  right: "left",
+  up: "up",
+  down: "down"
+}
+
+const PLAYER_TWO_INPUT_ANIMATION_MAP = {
+  left: "left",
+  right: "right",
+  up: "up",
+  down: "down"
+}
+
 // ----------------------------------------------------
 // Phaser logic functions, game loop and tick.
 // ----------------------------------------------------
@@ -166,13 +185,20 @@ function preload() {
   this.load.image('balcony', 'assets/balcony.png');
 }
 
+function createCharacter(phaser, sprite, position, isFlipped) {
+  SPRITES[sprite] = phaser.add.sprite(position, PHASER_GAME_CONFIG.height * 0.67, 'character');
+
+  SPRITES[sprite].flipX = isFlipped;
+
+  Animation.createCharacterAnimations(phaser, SPRITES[sprite]);
+  SPRITES[sprite].play('idle', true);
+}
+
 function create() {
   addImages(this);
 
-  // TODO: Create method for addPlayer and call it twice
-  const character = this.add.sprite(PHASER_GAME_CONFIG.width * 0.76, PHASER_GAME_CONFIG.height * 0.67, 'character');
-  Animation.createCharacterAnimations(this, character);
-  character.play('idle', true);
+  createCharacter(this, "PLAYER_ONE", PHASER_GAME_CONFIG.width * 0.24, true);
+  createCharacter(this, "PLAYER_TWO", PHASER_GAME_CONFIG.width * 0.76, false);
 
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
     this,
@@ -232,11 +258,15 @@ function processInputs(time) {
     // TODO: Make player1 strike pose and hold it.
     // You may want to set something like PLAYERS_STATE.needToAnimatedP1DanceMove = true, then use that in the update() method to do the animation,
     // to keep the animation render out of this game logic method.
+
+    SPRITES.PLAYER_ONE.play(PLAYER_ONE_INPUT_ANIMATION_MAP[inputStates.p1LastKeyDown], true);
+
     inputStates.p1AnimationPlayed = true
   }
 
   if (inputStates.p2LastKeyDown && !inputStates.p2AnimationPlayed) {
-    // TODO: Make player2 strike pose and hold it.
+    SPRITES.PLAYER_TWO.play(PLAYER_TWO_INPUT_ANIMATION_MAP[inputStates.p2LastKeyDown], true);
+
     inputStates.p2AnimationPlayed = true;
   }
 
