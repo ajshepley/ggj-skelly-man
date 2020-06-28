@@ -3,7 +3,7 @@
     {
       "type": "interstitial",
       "imageKey": "interstitial",
-      "imagePath": "assets/placeholder_tutorial.png"
+      "imagePath": "assets/level_0_tutorial.png"
     },
     {
       "type": "main",
