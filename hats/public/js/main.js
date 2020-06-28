@@ -171,7 +171,7 @@ mainScene.create = function () {
 
   Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
 
-  SOUNDS.BATTLE_MUSIC = this.sound.add('battle_music');
+  SOUNDS.BATTLE_MUSIC = this.sound.add('battle_music', {volume: 0.5});
   SOUNDS.BATTLE_MUSIC.play();
 }
 

@@ -40,7 +40,7 @@ tutorialScene.create = function () {
   this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, CURRENT_LEVEL_CONFIG.type);
   game.input.mouse.capture = true;
 
-  SCENE_OBJECTS.TUTORIAL_MUSIC = this.sound.add('tutorial_music');
+  SCENE_OBJECTS.TUTORIAL_MUSIC = this.sound.add('tutorial_music', {volume: 0.5});
   SCENE_OBJECTS.TUTORIAL_MUSIC.play();
 }
 
