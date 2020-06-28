@@ -151,11 +151,11 @@ function shutdown() {
 
 function preload() {
   // this.loadImage, loadAtlas, loadAudio
-  this.load.atlas('character', './assets/character.png', './assets/character.json');
+  this.load.atlas('character', '/assets/character.png', '/assets/character.json');
 
-  this.load.image('background', './assets/background.png');
-  this.load.image('monster', './assets/monster.png');
-  this.load.image('balcony', './assets/balcony.png');
+  this.load.image('background', '/assets/background.png');
+  this.load.image('monster', '/assets/monster.png');
+  this.load.image('balcony', '/assets/balcony.png');
 }
 
 function create() {
