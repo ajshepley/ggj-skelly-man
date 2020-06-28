@@ -8,7 +8,7 @@ export function create() {
     manualAnimations: [],
 
     // Must be a lambda or anonymous function.
-    addAnimation: function(animationFunction) {
+    addAnimation: function (animationFunction) {
       // why j, why? https://stackoverflow.com/questions/5999998/check-if-a-variable-is-of-function-type
       if (typeof animationFunction === "function" || {}.toString.call(animationFunction) === '[object Function]') {
         this.animations.push(animationFunction);
@@ -18,7 +18,7 @@ export function create() {
     },
 
     // Object must implement the functions 'step(time, currentFrameNumber)' and 'isDone()'.
-    addManualAnimation: function(manualAnimationObject) {
+    addManualAnimation: function (manualAnimationObject) {
       if (typeof manualAnimationObject.step !== 'function') {
         Util.debugLog(`Manual animation object [${manualAnimationObject}] does not implement step(), and cannot be enqueued.`);
         return;
@@ -32,8 +32,8 @@ export function create() {
       this.manualAnimations.push(manualAnimationObject);
     },
 
-    playAllAnimationsAndRemove: function() {
-      while(this.animations.length > 0) {
+    playAllAnimationsAndRemove: function () {
+      while (this.animations.length > 0) {
         try {
           this.animations.shift().call();
         } catch (error) {
@@ -54,7 +54,7 @@ export function create() {
       this.manualAnimations = this.manualAnimations.filter(element => !element.isDone());
     },
 
-    reset: function() {
+    reset: function () {
       this.animations = [];
       this.manualAnimations = [];
     }
