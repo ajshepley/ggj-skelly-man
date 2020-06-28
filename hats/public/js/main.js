@@ -97,6 +97,10 @@ const SPRITES = {
   BOSS: null
 }
 
+const SOUNDS = {
+  BATTLE_MUSIC: null
+}
+
 const PLAYER_ONE_INPUT_ANIMATION_MAP = {
   left: "left_left",
   right: "left_right",
@@ -139,6 +143,8 @@ mainScene.preload = function () {
   this.load.image('balcony', 'assets/balcony.png');
   this.load.image('auras', 'assets/auras.png');
   this.load.image('fireball', 'assets/fireball.png');
+
+  this.load.audio('battle_music', 'assets/Damiano_Baldoni_-_Dance_of_Souls.mp3');
 }
 
 mainScene.create = function () {
@@ -162,6 +168,9 @@ mainScene.create = function () {
   );
 
   Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
+
+  SOUNDS.BATTLE_MUSIC = this.sound.add('battle_music');
+  SOUNDS.BATTLE_MUSIC.play();
 }
 
 function addImages(phaserScene) {
@@ -224,6 +233,7 @@ mainScene.update = function (time, delta) {
 }
 
 function loadNewStage() {
+  SOUNDS.BATTLE_MUSIC.stop();
   const levelNameToLoad = GAME_CONFIG.stages[LEVEL_INDEX + 1].type;
   Util.debugLog(`Loading level ${LEVEL_INDEX + 1} of type ${levelNameToLoad}.`);
   mainScene.scene.start(levelNameToLoad, { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: LEVEL_INDEX + 1, config: GAME_CONFIG });
