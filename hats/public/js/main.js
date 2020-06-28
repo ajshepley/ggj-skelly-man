@@ -7,51 +7,17 @@ import * as AnimationQueue from './animationQueue.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
 import { tutorialScene } from './scenes/tutorial.js';
-// import { PHASER_GAME_CONFIG } from './boot.js';
 
 // ----------------------------------------------------
-// Configs and constants
+// Configs and constants - configure in gameConfig.json, configInfo.js and boot.js
 // ----------------------------------------------------
 
 let PHASER_GAME_CONFIG = null;
-
+let GAME_CONFIG = null;
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
-const GAME_LOGIC_CONFIG = {
-  // Can the user grow the dance ring by pressing the same direction multiple times in a row?
-  ALLOW_SAME_DIRECTION_ATTACKS: false,
-
-  // How many millis until the boss bar is full, from 0?
-  BOSS_ATTACK_BAR_GROWTH_TIME_MILLIS: 10_000,
-
-  // Lockout time before another input is accepted for a player.
-  // Also used to determine how close P2 and P1 are to each other's inputs.
-  PLAYER_ACTION_DURATION_MILLIS: 250,
-
-  // How far away can two player inputs be before we disregard them?
-  // For now, this can be the same as the player action duration. We can increase difficulty by lowering this value.
-  PLAYER_ATTACK_WINDOW_MILLIS: 250,
-
-  // When the players get hit, how long before they are allowed to do inputs and attack?
-  PLAYER_HITSTUN_TIME_MILLIS: 1100,
-
-  // Only change/render the current circle and enemy boss meter fill every N frames.
-  // This can be tied to the BPM or rhythm of a song.
-  RENDER_CIRCLE_EVERY_N_FRAMES: 10,
-  RENDER_BOSS_BAR_EVERY_N_FRAMES: 30,
-
-  // The damage ring will grow by this percent each time the players sync a move.
-  PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE: 20,
-
-  // How long does a full ring take to shrink to 0? Used for constant ring shrinkage.
-  FULL_RING_SHRINK_TIME_MILLIS: 20_000,
-
-  // When the players max out a ring, how much damage should they do to the boss health?
-  DAMAGE_PER_FULL_RING: 20
-};
-
-const BOSS_CONFIG = {
-  bossMeterWidth: 400,
-};
+let GAME_LOGIC_CONFIG = null;
+let BOSS_CONFIG = null;
+let LEVEL_INDEX = 0;
 
 // ----------------------------------------------------
 // Global States
@@ -155,6 +121,17 @@ mainScene.init = function (data) {
   // TODO: Pull the scene config data - which enemy are we fighting/level/player data? from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
   PHASER_GAME_CONFIG = data.PHASER_GAME_CONFIG;
+  LEVEL_INDEX = data.levelIndex;
+  GAME_CONFIG = data.config;
+  GAME_LOGIC_CONFIG = GAME_CONFIG.stages[LEVEL_INDEX].gameLogicConfig;
+  BOSS_CONFIG = GAME_CONFIG.stages[LEVEL_INDEX].bossConfig;
+}
+
+function resetConfigs() {
+  PHASER_GAME_CONFIG = null;
+  GAME_LOGIC_CONFIG = null;
+  BOSS_CONFIG = null;
+  LEVEL_INDEX = 0;
 }
 
 // Called when the state shuts down, e.g. when transitioning to another state.
@@ -163,6 +140,7 @@ mainScene.shutdown = function () {
   BOSS_STATE.reset();
   PLAYERS_STATE.reset();
   ANIMATION_QUEUE.reset();
+  resetConfigs();
 }
 
 mainScene.preload = function () {
@@ -230,12 +208,12 @@ mainScene.update = function (time, delta) {
 
   // Render updates.
   // TODO: These meters could be initialized with these render constants, and played by the manual animation queue instead.
-  if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_CIRCLE_EVERY_N_FRAMES === 0) {
+  if (currentFrameNumber % GAME_LOGIC_CONFIG.renderCircleEveryNFrames === 0) {
     Util.debugLog(`Player attack progress: ${BATTLE_STATE.playerAttackProgressPercent}`);
     BATTLE_STATE.playerAttackSyncMeter.updateFill(BATTLE_STATE.playerAttackProgressPercent);
   }
 
-  if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_BOSS_BAR_EVERY_N_FRAMES === 0) {
+  if (currentFrameNumber % GAME_LOGIC_CONFIG.renderBossBarEveryNFrames === 0) {
     Util.debugLog(`Boss attack progress: ${BATTLE_STATE.bossAttackProgressPercent}`);
     BATTLE_STATE.bossAttackTimerMeter.updateFill(BATTLE_STATE.bossAttackProgressPercent);
   }
@@ -255,7 +233,7 @@ mainScene.update = function (time, delta) {
 // TODO: Abstract segments to their own methods.
 function processInputs(time) {
   const inputStates = PLAYERS_STATE.PLAYERS_INPUT_STATES;
-  const canAttack = time - BATTLE_STATE.lastSuccessfulPlayerAttackTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS;
+  const canAttack = time - BATTLE_STATE.lastSuccessfulPlayerAttackTimestamp > GAME_LOGIC_CONFIG.playerActionDurationMillis;
 
   if (inputStates.p1LastKeyDown && !inputStates.p1AnimationPlayed) {
     // TODO: Make player1 strike pose and hold it.
@@ -275,7 +253,7 @@ function processInputs(time) {
 
   const danceDirectionHasChanged =
     BATTLE_STATE.lastSuccessfulPlayer1AttackDirection !== inputStates.p1LastKeyDown ||
-    GAME_LOGIC_CONFIG.ALLOW_SAME_DIRECTION_ATTACKS;
+    GAME_LOGIC_CONFIG.allowSameDirectionAttacks;
 
   // Check for a matching input first, before clearing. Allow users to get attacks in as late as possible.
   if (inputStates.p1LastKeyDown && inputStates.p2LastKeyDown && canAttack && danceDirectionHasChanged) {
@@ -285,7 +263,7 @@ function processInputs(time) {
     if (isSameInput) {
       // In short, damage done to the enemy is scaled based on how close the inputs were together.
       const timeBetweenAttackInputs = Math.abs(inputStates.p1KeyDownTimestamp - inputStates.p2KeyDownTimestamp);
-      const syncPercentage = (GAME_LOGIC_CONFIG.PLAYER_ATTACK_WINDOW_MILLIS - timeBetweenAttackInputs) / GAME_LOGIC_CONFIG.PLAYER_ATTACK_WINDOW_MILLIS;
+      const syncPercentage = (GAME_LOGIC_CONFIG.playerAttackWindowMillis - timeBetweenAttackInputs) / GAME_LOGIC_CONFIG.playerAttackWindowMillis;
 
       Util.debugLog(`Same input detected. Time between attacks: ${timeBetweenAttackInputs}. Sync percent: ${syncPercentage}.`);
 
@@ -300,12 +278,12 @@ function processInputs(time) {
   }
 
   // Clear inputs if the last input was more than TIMEOUT seconds ago.
-  if (inputStates.p1KeyDownTimestamp && time - inputStates.p1KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
+  if (inputStates.p1KeyDownTimestamp && time - inputStates.p1KeyDownTimestamp > GAME_LOGIC_CONFIG.playerActionDurationMillis) {
     Util.debugLog(`Clearing p1 inputs. Last input was at ${inputStates.p1KeyDownTimestamp} and time is ${time}`);
     PLAYERS_STATE.resetP1Inputs();
   }
 
-  if (inputStates.p2KeyDownTimestamp && time - inputStates.p2KeyDownTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS) {
+  if (inputStates.p2KeyDownTimestamp && time - inputStates.p2KeyDownTimestamp > GAME_LOGIC_CONFIG.playerActionDurationMillis) {
     Util.debugLog(`Clearing p2 inputs. Last input was at ${inputStates.p1KeyDownTimestamp} and time is ${time}`);
     PLAYERS_STATE.resetP2Inputs();
   }
@@ -313,19 +291,19 @@ function processInputs(time) {
 
 // Direction of attack and how close the players were to being in sync (1.0 === players pressed at same millisecond)
 function growDamageRing(attackMoveDirection, playerSyncPercentage) {
-  const ringIncreaseAmount = (playerSyncPercentage * GAME_LOGIC_CONFIG.PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE) / 100;
+  const ringIncreaseAmount = (playerSyncPercentage * GAME_LOGIC_CONFIG.percentRingGrowthPerSyncedDanceMove) / 100;
   BATTLE_STATE.playerAttackProgressPercent = Math.min(BATTLE_STATE.playerAttackProgressPercent + ringIncreaseAmount, 1);
   Util.debugLog(`Growing attack ring with direction: ${attackMoveDirection} and player sync of ${playerSyncPercentage} percent. Increase amount: ${ringIncreaseAmount}.`);
 }
 
 function decreaseDamageRingOnTick() {
-  const ringDecreaseAmountPerFrame = 100 / ((GAME_LOGIC_CONFIG.FULL_RING_SHRINK_TIME_MILLIS / 1000) * 60);
+  const ringDecreaseAmountPerFrame = 100 / ((GAME_LOGIC_CONFIG.fullRingShrinkTimeMillis / 1000) * 60);
   const normalizedDecreaseAmount = ringDecreaseAmountPerFrame / 100;
   BATTLE_STATE.playerAttackProgressPercent = Math.max(BATTLE_STATE.playerAttackProgressPercent - normalizedDecreaseAmount, 0);
 }
 
 function growBossAttackMeter() {
-  const meterGrowthAmount = 100 / ((GAME_LOGIC_CONFIG.BOSS_ATTACK_BAR_GROWTH_TIME_MILLIS / 1000) * 60);
+  const meterGrowthAmount = 100 / ((GAME_LOGIC_CONFIG.bossAttackBarGrowthTimeMillis / 1000) * 60);
   const normalizedIncreaseAmount = meterGrowthAmount / 100;
   BATTLE_STATE.bossAttackProgressPercent = Math.min(BATTLE_STATE.bossAttackProgressPercent + normalizedIncreaseAmount, 1);
 }
