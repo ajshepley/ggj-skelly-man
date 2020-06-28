@@ -48,7 +48,7 @@ const GAME_LOGIC_CONFIG = {
   PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE: 20,
 
   // How long does a full ring take to shrink to 0? Used for constant ring shrinkage.
-  FULL_RING_SHRINK_TIME_MILLIS: 30000,
+  FULL_RING_SHRINK_TIME_MILLIS: 20000,
 
   // When the players max out a ring, how much damage should they do to the boss health?
   DAMAGE_PER_FULL_RING: 20
