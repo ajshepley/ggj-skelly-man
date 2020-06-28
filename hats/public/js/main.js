@@ -230,6 +230,8 @@ function processInputs(time) {
 
   if (inputStates.p1LastKeyDown && !inputStates.p1AnimationPlayed) {
     // TODO: Make player1 strike pose and hold it.
+    // You may want to set something like PLAYERS_STATE.needToAnimatedP1DanceMove = true, then use that in the update() method to do the animation,
+    // to keep the animation render out of this game logic method.
     inputStates.p1AnimationPlayed = true
   }
 
@@ -250,6 +252,7 @@ function processInputs(time) {
 
       Util.debugLog(`Same input detected. Time between attacks: ${timeBetweenAttackInputs}. Sync percent: ${syncPercentage}.`);
 
+      // TODO: Any animations for when the players are in sync, e.g. "NICE" text, sparkles/glow, transition frames back to idle, etc.
       growDamageRing(inputStates.p1LastKeyDown, syncPercentage);
 
       PLAYERS_STATE.lastSuccessfulAttackTimestamp = time;
