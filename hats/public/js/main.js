@@ -12,8 +12,8 @@ import { tutorialScene } from './scenes/tutorial.js';
 
 export const PHASER_GAME_CONFIG = {
   type: Phaser.AUTO,
-  width: 1600,
-  height: 900,
+  width: 1920,
+  height: 1080,
   title: 'Rhythm Game',
   scene: [
     tutorialScene,
@@ -25,7 +25,14 @@ export const PHASER_GAME_CONFIG = {
       init: init,
       shutdown: shutdown
     }
-  ]
+  ],
+  physics: {
+      default: 'arcade',
+      arcade: {
+          gravity: { y: 500 },
+          debug: false
+      }
+  }
 };
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
@@ -142,9 +149,21 @@ function shutdown() {
 
 function preload() {
   // this.loadImage, loadAtlas, loadAudio
+  this.load.atlas('character', '../assets/character.png', '../assets/character.json');
+
+  this.load.image('background', '../assets/background.png');
+  this.load.image('monster', '../assets/monster.png');
+  this.load.image('balcony', '../assets/balcony.png');
 }
 
 function create() {
+  // Background
+  this.add.image(PHASER_GAME_CONFIG.width/2, PHASER_GAME_CONFIG.height/2, 'background');
+  // Monster
+  this.add.image(PHASER_GAME_CONFIG.width/2, PHASER_GAME_CONFIG.height/2, 'monster');
+  // Balcony
+  this.add.image(PHASER_GAME_CONFIG.width/2, PHASER_GAME_CONFIG.height/2, 'balcony');
+
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
     this,
     PHASER_GAME_CONFIG.width * 0.5,
@@ -165,6 +184,18 @@ function create() {
   // add and play music, input, cursor keys, etc.
 
   Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
+
+  // Character animations
+  const character = this.add.sprite(PHASER_GAME_CONFIG.width * 0.75, PHASER_GAME_CONFIG.height * 0.7, 'character');
+
+  this.anims.create({
+    key: 'idle',
+    frames: this.anims.generateFrameNames('character', { prefix: 'idle', start: 1, end: 3, zeroPad: 2 }),
+    frameRate: 6,
+    repeat: -1
+  });
+  
+  character.play('idle', true);
 }
 
 function update(time, delta) {
