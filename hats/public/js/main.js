@@ -21,7 +21,9 @@ export const PHASER_GAME_CONFIG = {
       key: 'main',
       preload: preload,
       create: create,
-      update: update
+      update: update,
+      init: init,
+      shutdown: shutdown
     }
   ]
 };
@@ -34,7 +36,10 @@ const GAME_LOGIC_CONFIG = {
 
   // How far away can two player inputs be before we disregard them?
   // For now, this can be the same as the player action duration. We can increase difficulty by lowering this value.
-  PLAYER_ATTACK_WINDOW_MILLIS: 900
+  PLAYER_ATTACK_WINDOW_MILLIS: 900,
+
+  // When the player gets hit, how long before they are allowed to do inputs and attack?
+  PLAYER_HITSTUN_TIME: 1100
 };
 
 const BOSS_CONFIG = {
@@ -49,7 +54,12 @@ export const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
 const BATTLE_STATE = {
   playerAttackSyncMeter: null,
-  bossAttackTimerMeter: null
+  bossAttackTimerMeter: null,
+
+  reset: function() {
+    this.playerAttackSyncMeter = null;
+    this.bossAttackTimerMeter = null;
+  }
 };
 
 const PLAYERS_STATE = {
@@ -108,6 +118,13 @@ const BOSS_STATE = {
 function init(data) {
   // TODO: Pull the scene config data - which enemy are we fighting/level/player data? from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
+}
+
+// Called when the state shuts down, e.g. when transitioning to another state.
+function shutdown() {
+  BATTLE_STATE.reset();
+  BOSS_STATE.reset();
+  PLAYERS_STATE.reset();
 }
 
 function preload() {
