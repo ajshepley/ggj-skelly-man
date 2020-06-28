@@ -348,7 +348,7 @@ function updateGame(time, delta, currentFrameNumber) {
   }
 
   // Check boss first, be lenient on players.
-  if (BOSS_STATE.bossHealth <= 0) {
+  if (BOSS_STATE.health <= 0) {
     // TODO: Player beat boss, play boss death, pause inputs, victory music, then load next tutorial scene
 
     loadNewStage();
