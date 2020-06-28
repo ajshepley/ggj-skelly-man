@@ -39,24 +39,26 @@ export const PHASER_GAME_CONFIG = {
 const GAME_LOGIC_CONFIG = {
   // Lockout time before another input is accepted for a player.
   // Also used to determine how close P2 and P1 are to each other's inputs.
-  PLAYER_ACTION_DURATION_MILLIS: 900,
+  PLAYER_ACTION_DURATION_MILLIS: 250,
 
   // How far away can two player inputs be before we disregard them?
   // For now, this can be the same as the player action duration. We can increase difficulty by lowering this value.
-  PLAYER_ATTACK_WINDOW_MILLIS: 900,
+  PLAYER_ATTACK_WINDOW_MILLIS: 250,
 
-  // When the player gets hit, how long before they are allowed to do inputs and attack?
-  PLAYER_HITSTUN_TIME: 1100,
+  // When the players get hit, how long before they are allowed to do inputs and attack?
+  PLAYER_HITSTUN_TIME_MILLIS: 1100,
 
-  // Only change/render the current circle fill every N frames.
+  // Only change/render the current circle and enemy boss meter fill every N frames.
+  // This can be tied to the BPM or rhythm of a song.
   RENDER_CIRCLE_EVERY_N_FRAMES: 10,
 
   // The damage ring will grow by this percent each time the players sync a move.
   PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE: 20,
 
   // How long does a full ring take to shrink to 0? Used for constant ring shrinkage.
-  FULL_RING_SHRINK_TIME_MILLIS: 30000,
+  FULL_RING_SHRINK_TIME_MILLIS: 20000,
 
+  // When the players max out a ring, how much damage should they do to the boss health?
   DAMAGE_PER_FULL_RING: 20
 };
 
@@ -266,10 +268,9 @@ function processInputs(time) {
 
 // Direction of attack and how close the players were to being in sync (1.0 === players pressed at same millisecond)
 function growDamageRing(attackMoveDirection, playerSyncPercentage) {
-  // TODO: grow the damage ring based on how well the players synced.
   const ringIncreaseAmount = (playerSyncPercentage * GAME_LOGIC_CONFIG.PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE) / 100;
-  Util.debugLog(`Growing attack ring with direction: ${attackMoveDirection} and player sync of ${playerSyncPercentage} percent. Increase amount: ${ringIncreaseAmount}.`);
   BATTLE_STATE.playerAttackProgressPercent = Math.min(BATTLE_STATE.playerAttackProgressPercent + ringIncreaseAmount, 1);
+  Util.debugLog(`Growing attack ring with direction: ${attackMoveDirection} and player sync of ${playerSyncPercentage} percent. Increase amount: ${ringIncreaseAmount}.`);
 }
 
 function decreaseDamageRingOnTick() {
