@@ -328,7 +328,7 @@ function updateGame(time, delta, currentFrameNumber) {
       startFrame: currentFrameNumber,
       animationLength: 60,
       flashStrength: 1.0,
-      step: function(time, currentFrameNumber) {
+      step: function (time, currentFrameNumber) {
         if (currentFrameNumber === this.startFrame) {
           SPRITES.BOSS.play('monster_damaged', true);
         }
@@ -337,7 +337,7 @@ function updateGame(time, delta, currentFrameNumber) {
           SPRITES.BOSS.play('monster_idle', true);
         }
       },
-      isDone: function(time, currentFrameNumber) {
+      isDone: function (time, currentFrameNumber) {
         return (currentFrameNumber - this.startFrame) > this.animationLength;
       }
     });
