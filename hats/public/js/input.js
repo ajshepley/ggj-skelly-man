@@ -1,3 +1,5 @@
+"use strict";
+
 import * as Util from './util.js';
 
 export const INPUT_DIRECTIONS = {

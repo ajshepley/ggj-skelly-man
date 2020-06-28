@@ -2,6 +2,7 @@
 
 import * as Util from './util.js';
 import * as Input from './input.js';
+import * as Animation from './animation.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
 import { tutorialScene } from './scenes/tutorial.js';
@@ -163,6 +164,11 @@ function preload() {
 function create() {
   addImages(this);
 
+  // TODO: Create method for addPlayer and call it twice
+  const character = this.add.sprite(PHASER_GAME_CONFIG.width * 0.76, PHASER_GAME_CONFIG.height * 0.67, 'character');
+  Animation.createCharacterAnimations(this, character);
+  character.play('idle', true);
+
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
     this,
     PHASER_GAME_CONFIG.width * 0.5,
@@ -180,11 +186,7 @@ function create() {
     0xff0000
   );
 
-  // add and play music, input, cursor keys, etc.
-
   Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
-
-  initAnimations(this);
 }
 
 function addImages(phaserScene) {
@@ -194,20 +196,6 @@ function addImages(phaserScene) {
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
   // Balcony
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'balcony');
-}
-
-function initAnimations(phaserScene) {
-  // Character animations
-  const character = phaserScene.add.sprite(PHASER_GAME_CONFIG.width * 0.76, PHASER_GAME_CONFIG.height * 0.67, 'character');
-
-  phaserScene.anims.create({
-    key: 'idle',
-    frames: phaserScene.anims.generateFrameNames('character', { prefix: 'idle', start: 1, end: 3, zeroPad: 2 }),
-    frameRate: 6,
-    repeat: -1
-  });
-
-  character.play('idle', true);
 }
 
 function update(time, delta) {
