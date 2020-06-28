@@ -115,6 +115,7 @@ const PLAYER_TWO_INPUT_ANIMATION_MAP = {
 // Phaser logic functions, game loop and tick.
 // ----------------------------------------------------
 
+// Needs to match the types in gameConfig.json.
 export let mainScene = new Phaser.Scene('mainScene');
 
 // Init is called first, by `this.scene.start('main', data);`
@@ -209,6 +210,12 @@ mainScene.update = function (time, delta) {
   ANIMATION_QUEUE.playManualAnimationsAndRemoveIfDone(time, currentFrameNumber);
 
   // set texts, etc.
+}
+
+function loadNewStage() {
+  const levelNameToLoad = GAME_CONFIG.stages[LEVEL_INDEX + 1].type;
+  Util.debugLog(`Loading level ${LEVEL_INDEX + 1} of type ${levelNameToLoad}.`);
+  this.scene.start(levelNameToLoad, { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: LEVEL_INDEX + 1, config: GAME_CONFIG });
 }
 
 // Called when the state shuts down, e.g. when transitioning to another state.
@@ -336,7 +343,7 @@ function updateGame(time, delta, currentFrameNumber) {
     });
 
     BATTLE_STATE.playerAttackProgressPercent = 0;
-    
+
     // Interupt boss's attack
     BATTLE_STATE.bossAttackProgressPercent = 0;
   }

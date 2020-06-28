@@ -6,7 +6,7 @@
       "imagePath": "assets/level_0_tutorial.png"
     },
     {
-      "type": "main",
+      "type": "mainScene",
       "gameLogicConfig": {
         "allowSameDirectionAttacks": false,
         "bossAttackBarGrowthTimeMillis": 10000,

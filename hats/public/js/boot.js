@@ -43,6 +43,9 @@ function create() {
   }
 
   const phaserConfigObject = { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: 0, config: config };
-  this.scene.start('tutorialScene', phaserConfigObject);
+
+  const levelNameToLoad = config.stages[0].type;
+  Util.debugLog(`Loading level ${0} of type ${levelNameToLoad}.`);
+  this.scene.start(levelNameToLoad, phaserConfigObject);
 }
 

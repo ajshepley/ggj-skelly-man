@@ -3,7 +3,8 @@
 import { game } from '../boot.js';
 import * as Util from '../util.js';
 
-export let tutorialScene = new Phaser.Scene('tutorialScene');
+// Needs to match the types in gameConfig.json
+export let tutorialScene = new Phaser.Scene('interstitial');
 
 let PHASER_GAME_CONFIG = null;
 let GAME_CONFIG = null;
@@ -48,8 +49,10 @@ tutorialScene.update = function () {
   if (game.input.activePointer.isDown) {
     // TODO: Add initial config data to start call.
     // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
-    Util.debugLog(`Loading level ${LEVEL_INDEX + 1}.`);
-    this.scene.start('mainScene', { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: LEVEL_INDEX + 1, config: GAME_CONFIG });
+    const levelNameToLoad = GAME_CONFIG.stages[LEVEL_INDEX + 1].type;
+    Util.debugLog(`Loading level ${LEVEL_INDEX + 1} of type ${levelNameToLoad}.`);
+
+    this.scene.start(levelNameToLoad, { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: LEVEL_INDEX + 1, config: GAME_CONFIG });
   }
 }
 
