@@ -38,6 +38,9 @@ export const PHASER_GAME_CONFIG = {
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 const GAME_LOGIC_CONFIG = {
+  // How many millis until the boss bar is full, from 0?
+  BOSS_ATTACK_BAR_GROWTH_TIME_MILLIS: 10_000,
+
   // Lockout time before another input is accepted for a player.
   // Also used to determine how close P2 and P1 are to each other's inputs.
   PLAYER_ACTION_DURATION_MILLIS: 250,
@@ -52,12 +55,13 @@ const GAME_LOGIC_CONFIG = {
   // Only change/render the current circle and enemy boss meter fill every N frames.
   // This can be tied to the BPM or rhythm of a song.
   RENDER_CIRCLE_EVERY_N_FRAMES: 10,
+  RENDER_BOSS_BAR_EVERY_N_FRAMES: 30,
 
   // The damage ring will grow by this percent each time the players sync a move.
   PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE: 20,
 
   // How long does a full ring take to shrink to 0? Used for constant ring shrinkage.
-  FULL_RING_SHRINK_TIME_MILLIS: 20000,
+  FULL_RING_SHRINK_TIME_MILLIS: 20_000,
 
   // When the players max out a ring, how much damage should they do to the boss health?
   DAMAGE_PER_FULL_RING: 20
@@ -208,8 +212,13 @@ function update(time, delta) {
   if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_CIRCLE_EVERY_N_FRAMES === 0) {
     Util.debugLog(`Player attack progress: ${BATTLE_STATE.playerAttackProgressPercent}`);
     BATTLE_STATE.playerAttackSyncMeter.updateFill(BATTLE_STATE.playerAttackProgressPercent);
-    BATTLE_STATE.bossAttackTimerMeter.updateFill(currentFrameNumber / 100);
   }
+
+  if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_BOSS_BAR_EVERY_N_FRAMES === 0) {
+    Util.debugLog(`Boss attack progress: ${BATTLE_STATE.bossAttackProgressPercent}`);
+    BATTLE_STATE.bossAttackTimerMeter.updateFill(BATTLE_STATE.bossAttackProgressPercent);
+  }
+
   // set texts, etc.
 }
 
@@ -280,9 +289,17 @@ function decreaseDamageRingOnTick() {
   BATTLE_STATE.playerAttackProgressPercent = Math.max(BATTLE_STATE.playerAttackProgressPercent - normalizedDecreaseAmount, 0);
 }
 
+function growBossAttackMeter() {
+  const meterGrowthAmount = 100 / ((GAME_LOGIC_CONFIG.BOSS_ATTACK_BAR_GROWTH_TIME_MILLIS / 1000) * 60);
+  const normalizedIncreaseAmount = meterGrowthAmount / 100;
+  BATTLE_STATE.bossAttackProgressPercent = Math.min(BATTLE_STATE.bossAttackProgressPercent + normalizedIncreaseAmount, 1);
+}
+
 // Main game logic update method.
 function updateGame(time, delta, currentFrameNumber) {
   processInputs(time);
+
+  growBossAttackMeter();
 
   if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
     // TODO: Do damage to boss, do any boss reeling animation, pause boss attack meter?
