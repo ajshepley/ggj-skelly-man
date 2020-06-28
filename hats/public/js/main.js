@@ -3,6 +3,7 @@
 import * as Util from './util.js';
 import * as Input from './input.js';
 import * as Animation from './animation.js';
+import * as AnimationQueue from './animationQueue.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
 import { tutorialScene } from './scenes/tutorial.js';
@@ -80,28 +81,7 @@ const BOSS_CONFIG = {
 
 export const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
-const ANIMATION_QUEUE = {
-  animations: [],
-
-  add: function(animationFunction) {
-    this.animations.push(animationFunction);
-  },
-
-  playAllAndRemove: function() {
-    while(this.animations.length > 0) {
-      try {
-        this.animations.shift().call();
-      } catch (error) {
-        Util.debugLog("Error playing animation.");
-        console.log(error);
-      }
-    }
-  },
-
-  reset: function() {
-    this.animations = [];
-  }
-}
+const ANIMATION_QUEUE = AnimationQueue.create();
 
 const BATTLE_STATE = {
   playerAttackSyncMeter: null,
@@ -203,6 +183,7 @@ function shutdown() {
   BATTLE_STATE.reset();
   BOSS_STATE.reset();
   PLAYERS_STATE.reset();
+  ANIMATION_QUEUE.reset();
 }
 
 function preload() {
@@ -279,7 +260,8 @@ function update(time, delta) {
     BATTLE_STATE.bossAttackTimerMeter.updateFill(BATTLE_STATE.bossAttackProgressPercent);
   }
 
-  ANIMATION_QUEUE.playAllAndRemove();
+  ANIMATION_QUEUE.playAllAnimationsAndRemove();
+  ANIMATION_QUEUE.playManualAnimationsAndRemoveIfDone();
 
   // set texts, etc.
 }
@@ -294,13 +276,13 @@ function processInputs(time) {
     // You may want to set something like PLAYERS_STATE.needToAnimatedP1DanceMove = true, then use that in the update() method to do the animation,
     // to keep the animation render out of this game logic method.
 
-    ANIMATION_QUEUE.add(() => SPRITES.PLAYER_ONE.play(PLAYER_ONE_INPUT_ANIMATION_MAP[inputStates.p1LastKeyDown], true));
+    ANIMATION_QUEUE.addAnimation(() => SPRITES.PLAYER_ONE.play(PLAYER_ONE_INPUT_ANIMATION_MAP[inputStates.p1LastKeyDown], true));
 
     inputStates.p1AnimationPlayed = true
   }
 
   if (inputStates.p2LastKeyDown && !inputStates.p2AnimationPlayed) {
-    ANIMATION_QUEUE.add(() => SPRITES.PLAYER_TWO.play(PLAYER_TWO_INPUT_ANIMATION_MAP[inputStates.p2LastKeyDown], true));
+    ANIMATION_QUEUE.addAnimation(() => SPRITES.PLAYER_TWO.play(PLAYER_TWO_INPUT_ANIMATION_MAP[inputStates.p2LastKeyDown], true));
 
     inputStates.p2AnimationPlayed = true;
   }
