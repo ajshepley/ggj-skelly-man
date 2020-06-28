@@ -128,23 +128,6 @@ mainScene.init = function (data) {
   BOSS_CONFIG = GAME_CONFIG.stages[LEVEL_INDEX].bossConfig;
 }
 
-function resetConfigs() {
-  GAME_CONFIG = null;
-  PHASER_GAME_CONFIG = null;
-  GAME_LOGIC_CONFIG = null;
-  BOSS_CONFIG = null;
-  LEVEL_INDEX = 0;
-}
-
-// Called when the state shuts down, e.g. when transitioning to another state.
-mainScene.shutdown = function () {
-  BATTLE_STATE.reset();
-  BOSS_STATE.reset();
-  PLAYERS_STATE.reset();
-  ANIMATION_QUEUE.reset();
-  resetConfigs();
-}
-
 mainScene.preload = function () {
   // this.loadImage, loadAtlas, loadAudio
   this.load.atlas('left_character', 'assets/left_character.png', 'assets/left_character.json');
@@ -224,6 +207,23 @@ mainScene.update = function (time, delta) {
   ANIMATION_QUEUE.playManualAnimationsAndRemoveIfDone(time, currentFrameNumber);
 
   // set texts, etc.
+}
+
+// Called when the state shuts down, e.g. when transitioning to another state.
+mainScene.shutdown = function () {
+  BATTLE_STATE.reset();
+  BOSS_STATE.reset();
+  PLAYERS_STATE.reset();
+  ANIMATION_QUEUE.reset();
+  resetConfigs();
+}
+
+function resetConfigs() {
+  GAME_CONFIG = null;
+  PHASER_GAME_CONFIG = null;
+  GAME_LOGIC_CONFIG = null;
+  BOSS_CONFIG = null;
+  LEVEL_INDEX = 0;
 }
 
 // ----------------------------------------------------
