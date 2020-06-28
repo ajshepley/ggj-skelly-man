@@ -12,7 +12,7 @@ const SCENE_OBJECTS = {
   interstitialImage: null,
 }
 
-tutorialScene.init = function(data) {
+tutorialScene.init = function (data) {
   // TODO: Pull the scene config data - monster screen picture before fight, or end game screen - from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
 
@@ -20,12 +20,12 @@ tutorialScene.init = function(data) {
   PHASER_GAME_CONFIG = data.PHASER_GAME_CONFIG;
 }
 
-tutorialScene.preload = function() {
+tutorialScene.preload = function () {
   // this.load.image('interstitial', 'assets/placeholder_tutorial.png');
   SCENE_OBJECTS.interstitialImage = this.load.image('interstitial', 'assets/placeholder_tutorial.png');
 }
 
-tutorialScene.create = function() {
+tutorialScene.create = function () {
   // Placeholder graphics
   Util.debugLog(`Phaser game config width: ${PHASER_GAME_CONFIG.width}, scene object: ${SCENE_OBJECTS.interstitialImage}`);
 
@@ -34,7 +34,7 @@ tutorialScene.create = function() {
   game.input.mouse.capture = true;
 }
 
-tutorialScene.update = function() {
+tutorialScene.update = function () {
   // Go to next scene on click
   if (game.input.activePointer.isDown) {
     // TODO: Add initial config data to start call.

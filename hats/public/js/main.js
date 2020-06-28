@@ -151,21 +151,21 @@ const PLAYER_TWO_INPUT_ANIMATION_MAP = {
 export let mainScene = new Phaser.Scene('mainScene');
 
 // Init is called first, by `this.scene.start('main', data);`
-mainScene.init = function(data) {
+mainScene.init = function (data) {
   // TODO: Pull the scene config data - which enemy are we fighting/level/player data? from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
   PHASER_GAME_CONFIG = data.PHASER_GAME_CONFIG;
 }
 
 // Called when the state shuts down, e.g. when transitioning to another state.
-mainScene.shutdown = function() {
+mainScene.shutdown = function () {
   BATTLE_STATE.reset();
   BOSS_STATE.reset();
   PLAYERS_STATE.reset();
   ANIMATION_QUEUE.reset();
 }
 
-mainScene.preload = function() {
+mainScene.preload = function () {
   // this.loadImage, loadAtlas, loadAudio
   this.load.atlas('left_character', 'assets/left_character.png', 'assets/left_character.json');
   this.load.atlas('right_character', 'assets/right_character.png', 'assets/right_character.json');
@@ -176,7 +176,7 @@ mainScene.preload = function() {
   this.load.image('auras', 'assets/auras.png');
 }
 
-mainScene.create = function() {
+mainScene.create = function () {
   addImages(this);
 
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
@@ -222,7 +222,7 @@ function createCharacter(phaser, sprite, position, prefix) {
   SPRITES[sprite].play(`${prefix}idle`, true);
 }
 
-mainScene.update = function(time, delta) {
+mainScene.update = function (time, delta) {
   let currentFrameNumber = Math.floor(time / (1_000 / 60));
 
   // Engine/logic update.
