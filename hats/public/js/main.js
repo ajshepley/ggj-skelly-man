@@ -39,7 +39,18 @@ const GAME_LOGIC_CONFIG = {
   PLAYER_ATTACK_WINDOW_MILLIS: 900,
 
   // When the player gets hit, how long before they are allowed to do inputs and attack?
-  PLAYER_HITSTUN_TIME: 1100
+  PLAYER_HITSTUN_TIME: 1100,
+
+  // Only change/render the current circle fill every N frames.
+  RENDER_CIRCLE_EVERY_N_FRAMES: 10,
+
+  // The damage ring will grow by this percent each time the players sync a move.
+  PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE: 20,
+
+  // How long does a full ring take to shrink to 0? Used for constant ring shrinkage.
+  FULL_RING_SHRINK_TIME_MILLIS: 30000,
+
+  DAMAGE_PER_FULL_RING: 20
 };
 
 const BOSS_CONFIG = {
@@ -56,9 +67,13 @@ const BATTLE_STATE = {
   playerAttackSyncMeter: null,
   bossAttackTimerMeter: null,
 
+  // Progress percent towards the ring being filled. Out of 1.
+  playerAttackProgressPercent: 0,
+
   reset: function() {
     this.playerAttackSyncMeter = null;
     this.bossAttackTimerMeter = null;
+    this.playerAttackProgress = 0;
   }
 };
 
@@ -135,8 +150,8 @@ function create() {
     PHASER_GAME_CONFIG.width * 0.5,
     PHASER_GAME_CONFIG.height * 0.67,
     80,
-    0x00ff00)
-  ;
+    0x00ff00
+  );
 
   BATTLE_STATE.bossAttackTimerMeter = new BossMeter(
     this,
@@ -153,15 +168,17 @@ function create() {
 }
 
 function update(time, delta) {
-  let nextFrame = Math.floor(time / (1_000 / 60));
+  let currentFrameNumber = Math.floor(time / (1_000 / 60));
 
   processInputs(time);
 
-  if (nextFrame < 100) {
-    BATTLE_STATE.playerAttackSyncMeter.updateFill(nextFrame / 100);
-    BATTLE_STATE.bossAttackTimerMeter.updateFill(1 - nextFrame / 100);
+  if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_CIRCLE_EVERY_N_FRAMES === 0) {
+    Util.debugLog(`Player attack progress: ${BATTLE_STATE.playerAttackProgressPercent}`);
+    BATTLE_STATE.playerAttackSyncMeter.updateFill(BATTLE_STATE.playerAttackProgressPercent);
+    BATTLE_STATE.bossAttackTimerMeter.updateFill(currentFrameNumber / 100);
   }
 
+  decreaseDamageRingOnTick();
   // set texts, etc.
 }
 
@@ -219,5 +236,13 @@ function processInputs(time) {
 // Direction of attack and how close the players were to being in sync (1.0 === players pressed at same millisecond)
 function growDamageRing(attackMoveDirection, playerSyncPercentage) {
   // TODO: grow the damage ring based on how well the players synced.
-  Util.debugLog(`Damaging enemy boss with direction: ${attackMoveDirection} and timing difference of ${playerSyncPercentage} millis.`);
+  const ringIncreaseAmount = (playerSyncPercentage * GAME_LOGIC_CONFIG.PERCENT_RING_GROWTH_PER_SYNCED_DANCE_MOVE) / 100;
+  Util.debugLog(`Growing attack ring with direction: ${attackMoveDirection} and player sync of ${playerSyncPercentage} percent. Increase amount: ${ringIncreaseAmount}.`);
+  BATTLE_STATE.playerAttackProgressPercent = Math.min(BATTLE_STATE.playerAttackProgressPercent + ringIncreaseAmount, 1);
+}
+
+function decreaseDamageRingOnTick() {
+  const ringDecreaseAmountPerFrame = 100 / ((GAME_LOGIC_CONFIG.FULL_RING_SHRINK_TIME_MILLIS / 1000) * 60);
+  const normalizedDecreaseAmount = ringDecreaseAmountPerFrame / 100;
+  BATTLE_STATE.playerAttackProgressPercent = Math.max(BATTLE_STATE.playerAttackProgressPercent - normalizedDecreaseAmount, 0);
 }
