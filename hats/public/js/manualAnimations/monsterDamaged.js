@@ -1,5 +1,5 @@
 "use strict";
-export function monsterDamagedAnimation(SPRITES, BATTLE_STATE, initialFrameNumber) {
+export function monsterDamagedAnimation(GAME_LOGIC_CONFIG, SPRITES, BATTLE_STATE, BOSS_STATE, initialFrameNumber) {
   return {
     startFrame: initialFrameNumber,
     animationLength: 60,
@@ -28,7 +28,8 @@ export function monsterDamagedAnimation(SPRITES, BATTLE_STATE, initialFrameNumbe
         SPRITES.FIREBALL.y = 1080 * 0.75
       }
 
-      if (elapseFrames > this.animationLength) {
+      if (elapseFrames > this.animationLength) {    
+        BOSS_STATE.health -= GAME_LOGIC_CONFIG.damagePerFullRing;
         SPRITES.BOSS.play('monster_idle', true);
       }
     },
