@@ -1,10 +1,11 @@
 "use strict";
 
-export function monsterDamagedAnimation() {
+export function monsterDamagedAnimation(SPRITES, initialFrameNumber) {
   return {
-    startFrame: currentFrameNumber,
+    startFrame: initialFrameNumber,
     animationLength: 60,
     flashStrength: 1.0,
+
     step: function (time, currentFrameNumber) {
       if (currentFrameNumber === this.startFrame) {
         SPRITES.BOSS.play('monster_damaged', true);

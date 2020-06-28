@@ -324,7 +324,7 @@ function updateGame(time, delta, currentFrameNumber) {
     // TODO: Do damage to boss
 
     // White flash animation on boss
-    ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation());
+    ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation(SPRITES, currentFrameNumber));
 
     BATTLE_STATE.playerAttackProgressPercent = 0;
 
