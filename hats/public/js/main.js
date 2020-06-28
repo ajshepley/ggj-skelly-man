@@ -32,11 +32,11 @@ export const PHASER_GAME_CONFIG = {
 const GAME_LOGIC_CONFIG = {
   // Lockout time before another input is accepted for a player.
   // Also used to determine how close P2 and P1 are to each other's inputs.
-  PLAYER_ACTION_DURATION_MILLIS: 900,
+  PLAYER_ACTION_DURATION_MILLIS: 250,
 
   // How far away can two player inputs be before we disregard them?
   // For now, this can be the same as the player action duration. We can increase difficulty by lowering this value.
-  PLAYER_ATTACK_WINDOW_MILLIS: 900,
+  PLAYER_ATTACK_WINDOW_MILLIS: 250,
 
   // When the player gets hit, how long before they are allowed to do inputs and attack?
   PLAYER_HITSTUN_TIME: 1100,
@@ -50,6 +50,7 @@ const GAME_LOGIC_CONFIG = {
   // How long does a full ring take to shrink to 0? Used for constant ring shrinkage.
   FULL_RING_SHRINK_TIME_MILLIS: 30000,
 
+  // When the players max out a ring, how much damage should they do to the boss health?
   DAMAGE_PER_FULL_RING: 20
 };
 
