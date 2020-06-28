@@ -95,6 +95,7 @@ const BOSS_STATE = {
 const SPRITES = {
   PLAYER_ONE: null,
   PLAYER_TWO: null,
+  FIREBALL: null,
   BOSS: null
 }
 
@@ -139,6 +140,7 @@ mainScene.preload = function () {
   this.load.image('background', 'assets/background.png');
   this.load.image('balcony', 'assets/balcony.png');
   this.load.image('auras', 'assets/auras.png');
+  this.load.image('fireball', 'assets/fireball.png');
 }
 
 mainScene.create = function () {
@@ -148,8 +150,8 @@ mainScene.create = function () {
     this,
     PHASER_GAME_CONFIG.width * 0.5,
     PHASER_GAME_CONFIG.height * 0.67,
-    80,
-    0x00ff00
+    120,
+    0x2FF8FB
   );
 
   BATTLE_STATE.bossAttackTimerMeter = new BossMeter(
@@ -177,6 +179,10 @@ function addImages(phaserScene) {
   // Characters
   createCharacter(phaserScene, "PLAYER_ONE", PHASER_GAME_CONFIG.width * 0.24, "left_");
   createCharacter(phaserScene, "PLAYER_TWO", PHASER_GAME_CONFIG.width * 0.76, "right_");
+
+  // Fireball
+  SPRITES.FIREBALL = phaserScene.physics.add.image(PHASER_GAME_CONFIG.width * 0.5, PHASER_GAME_CONFIG.height * 0.75, 'fireball');
+  SPRITES.FIREBALL.visible = false;
 
   // Auras
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'auras');
@@ -322,7 +328,7 @@ function updateGame(time, delta, currentFrameNumber) {
 
   if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
     // White flash animation on boss
-    ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation(SPRITES, currentFrameNumber));
+    ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation(SPRITES, BATTLE_STATE, currentFrameNumber));
 
     BOSS_STATE.health -= GAME_LOGIC_CONFIG.damagePerFullRing;
 
