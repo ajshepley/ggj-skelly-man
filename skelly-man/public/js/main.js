@@ -532,7 +532,7 @@ var gameOverCounter = 0;
 
 function update(time, delta) {
     // set being attacked to false
-    let nextFrame = Math.floor(time / (1 _000 / 60));
+    let nextFrame = Math.floor(time / (1_000 / 60));
     if (currentFrame < nextFrame) {
         currentFrame = nextFrame;
     }
