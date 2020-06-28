@@ -1,9 +1,9 @@
 "use strict";
 
-import { game, PHASER_GAME_CONFIG } from '../main.js';
+import { game, PHASER_GAME_CONFIG } from '../boot.js';
 import * as Util from '../util.js';
 
-export let tutorialScene = new Phaser.Scene('Tutorial');
+export let tutorialScene = new Phaser.Scene('tutorialScene');
 
 const SCENE_OBJECTS = {
   BOX: null,
@@ -36,6 +36,6 @@ tutorialScene.update = function() {
   if (game.input.activePointer.isDown) {
     // TODO: Add initial config data to start call.
     // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
-    this.scene.start('main');
+    this.scene.start('mainScene');
   }
 }

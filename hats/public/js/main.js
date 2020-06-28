@@ -7,35 +7,11 @@ import * as AnimationQueue from './animationQueue.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
 import { tutorialScene } from './scenes/tutorial.js';
+import { PHASER_GAME_CONFIG } from './boot.js';
 
 // ----------------------------------------------------
 // Configs and constants
 // ----------------------------------------------------
-
-export const PHASER_GAME_CONFIG = {
-  type: Phaser.AUTO,
-  width: 1920,
-  height: 1080,
-  title: 'Rhythm Game',
-  scene: [
-    tutorialScene,
-    {
-      key: 'main',
-      preload: preload,
-      create: create,
-      update: update,
-      init: init,
-      shutdown: shutdown
-    }
-  ],
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 500 },
-      debug: false
-    }
-  }
-};
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 const GAME_LOGIC_CONFIG = {
@@ -78,8 +54,6 @@ const BOSS_CONFIG = {
 // ----------------------------------------------------
 // Global States
 // ----------------------------------------------------
-
-export const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
 const ANIMATION_QUEUE = AnimationQueue.create();
 
@@ -172,21 +146,23 @@ const PLAYER_TWO_INPUT_ANIMATION_MAP = {
 // Phaser logic functions, game loop and tick.
 // ----------------------------------------------------
 
+export let mainScene = new Phaser.Scene('mainScene');
+
 // Init is called first, by `this.scene.start('main', data);`
-function init(data) {
+mainScene.init = function(data) {
   // TODO: Pull the scene config data - which enemy are we fighting/level/player data? from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
 }
 
 // Called when the state shuts down, e.g. when transitioning to another state.
-function shutdown() {
+mainScene.shutdown = function() {
   BATTLE_STATE.reset();
   BOSS_STATE.reset();
   PLAYERS_STATE.reset();
   ANIMATION_QUEUE.reset();
 }
 
-function preload() {
+mainScene.preload = function() {
   // this.loadImage, loadAtlas, loadAudio
   this.load.atlas('left_character', 'assets/left_character.png', 'assets/left_character.json');
   this.load.atlas('right_character', 'assets/right_character.png', 'assets/right_character.json');
@@ -197,7 +173,7 @@ function preload() {
   this.load.image('auras', 'assets/auras.png');
 }
 
-function create() {
+mainScene.create = function() {
   addImages(this);
 
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
@@ -243,7 +219,7 @@ function createCharacter(phaser, sprite, position, prefix) {
   SPRITES[sprite].play(`${prefix}idle`, true);
 }
 
-function update(time, delta) {
+mainScene.update = function(time, delta) {
   let currentFrameNumber = Math.floor(time / (1_000 / 60));
 
   // Engine/logic update.
