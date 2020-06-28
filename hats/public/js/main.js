@@ -168,13 +168,14 @@ function processInputs(time) {
   const inputStates = PLAYERS_STATE.PLAYERS_INPUT_STATES;
   const canAttack = time - PLAYERS_STATE.lastSuccessfulAttackTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS;
 
-  // TODO: Make players strike pose and hold it.
   if (inputStates.p1LastKeyDown && !inputStates.p1AnimationPlayed) {
-
+    // TODO: Make player1 strike pose and hold it.
+    inputStates.p1AnimationPlayed = true
   }
 
   if (inputStates.p2LastKeyDown && !inputStates.p2AnimationPlayed) {
-
+    // TODO: Make player2 strike pose and hold it.
+    inputStates.p2AnimationPlayed = true;
   }
 
   // Check for a matching input first, before clearing. Allow users to get attacks in as late as possible.
