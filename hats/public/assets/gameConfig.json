@@ -1,4 +1,8 @@
 {
+  "audio": {
+    "fireballSoundPath": "assets/fireball_shoot.mp3",
+    "fireballSoundKey": "fireballSound"
+  },
   "stages": [
     {
       "type": "interstitial",
