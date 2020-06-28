@@ -24,9 +24,6 @@ tutorialScene.preload = function() {
 
 tutorialScene.create = function() {
   // Placeholder graphics
-  // SCENE_OBJECTS.BOX = this.add.graphics();
-  // SCENE_OBJECTS.BOX.fillStyle(0xffffff, 1);
-  // SCENE_OBJECTS.BOX.fillRect(PHASER_GAME_CONFIG.width / 2 - 100, PHASER_GAME_CONFIG.height / 2 - 100, 200, 200);
   Util.debugLog(`Phaser game config width: ${PHASER_GAME_CONFIG.width}, scene object: ${SCENE_OBJECTS.interstitialImage}`);
 
   this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'interstitial');
