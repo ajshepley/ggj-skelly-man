@@ -6,6 +6,7 @@ import * as Animation from './animation.js';
 import * as AnimationQueue from './animationQueue.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
+import { monsterDamagedAnimation } from './manualAnimations/monsterDamaged.js';
 
 // ----------------------------------------------------
 // Configs and constants - configure in gameConfig.json, configInfo.js and boot.js
@@ -322,25 +323,8 @@ function updateGame(time, delta, currentFrameNumber) {
   if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
     // TODO: Do damage to boss
 
-
     // White flash animation on boss
-    ANIMATION_QUEUE.addManualAnimation({
-      startFrame: currentFrameNumber,
-      animationLength: 60,
-      flashStrength: 1.0,
-      step: function (time, currentFrameNumber) {
-        if (currentFrameNumber === this.startFrame) {
-          SPRITES.BOSS.play('monster_damaged', true);
-        }
-
-        if ((currentFrameNumber - this.startFrame) > this.animationLength) {
-          SPRITES.BOSS.play('monster_idle', true);
-        }
-      },
-      isDone: function (time, currentFrameNumber) {
-        return (currentFrameNumber - this.startFrame) > this.animationLength;
-      }
-    });
+    ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation());
 
     BATTLE_STATE.playerAttackProgressPercent = 0;
 
