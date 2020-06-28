@@ -7,11 +7,13 @@ import * as AnimationQueue from './animationQueue.js';
 import { SyncMeter } from './SyncMeter.js';
 import { BossMeter } from './BossMeter.js';
 import { tutorialScene } from './scenes/tutorial.js';
-import { PHASER_GAME_CONFIG } from './boot.js';
+// import { PHASER_GAME_CONFIG } from './boot.js';
 
 // ----------------------------------------------------
 // Configs and constants
 // ----------------------------------------------------
+
+let PHASER_GAME_CONFIG = null;
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 const GAME_LOGIC_CONFIG = {
@@ -152,6 +154,7 @@ export let mainScene = new Phaser.Scene('mainScene');
 mainScene.init = function(data) {
   // TODO: Pull the scene config data - which enemy are we fighting/level/player data? from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
+  PHASER_GAME_CONFIG = data.PHASER_GAME_CONFIG;
 }
 
 // Called when the state shuts down, e.g. when transitioning to another state.

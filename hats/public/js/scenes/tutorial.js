@@ -1,9 +1,11 @@
 "use strict";
 
-import { game, PHASER_GAME_CONFIG } from '../boot.js';
+import { game } from '../boot.js';
 import * as Util from '../util.js';
 
 export let tutorialScene = new Phaser.Scene('tutorialScene');
+
+let PHASER_GAME_CONFIG = null;
 
 const SCENE_OBJECTS = {
   BOX: null,
@@ -15,6 +17,7 @@ tutorialScene.init = function(data) {
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
 
   // SCENE_OBJECTS.interstitialImagePath = data.imagePath;
+  PHASER_GAME_CONFIG = data.PHASER_GAME_CONFIG;
 }
 
 tutorialScene.preload = function() {
@@ -36,6 +39,6 @@ tutorialScene.update = function() {
   if (game.input.activePointer.isDown) {
     // TODO: Add initial config data to start call.
     // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
-    this.scene.start('mainScene');
+    this.scene.start('mainScene', { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG });
   }
 }

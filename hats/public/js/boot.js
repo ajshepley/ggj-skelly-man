@@ -28,5 +28,5 @@ export const PHASER_GAME_CONFIG = {
 export const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
 function create() {
-  this.scene.start('tutorialScene');
+  this.scene.start('tutorialScene', { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG });
 }
