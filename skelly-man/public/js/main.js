@@ -602,7 +602,7 @@ function update(time, delta) {
 
         if (time - timePlayerStartedAttack > 1_000 / 3) {
             isPlayerAttacking = false;
-            shouldDamageForAttack = true
+            shouldDamageForAttack = true;
         }
     } else {
         // Should be covered by the above if-statement, but... better safe than sorry.
