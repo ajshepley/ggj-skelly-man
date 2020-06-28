@@ -120,6 +120,8 @@ export let mainScene = new Phaser.Scene('mainScene');
 
 // Init is called first, by `this.scene.start('main', data);`
 mainScene.init = function (data) {
+  resetAll();
+
   // TODO: Pull the scene config data - which enemy are we fighting/level/player data? from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
   PHASER_GAME_CONFIG = data.PHASER_GAME_CONFIG;
@@ -165,9 +167,6 @@ mainScene.create = function () {
 }
 
 function addImages(phaserScene) {
-  if (LEVEL_INDEX > 1) {
-    return;
-  }
   // Background
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'background');
   // Monster
@@ -190,9 +189,6 @@ function addImages(phaserScene) {
 }
 
 function createCharacter(phaser, sprite, position, prefix) {
-  if (LEVEL_INDEX > 1) {
-    return;
-  }
   SPRITES[sprite] = phaser.add.sprite(position, PHASER_GAME_CONFIG.height * 0.67, `${prefix}character`);
 
   Animation.createCharacterAnimations(phaser, prefix);
@@ -226,16 +222,25 @@ mainScene.update = function (time, delta) {
 function loadNewStage() {
   const levelNameToLoad = GAME_CONFIG.stages[LEVEL_INDEX + 1].type;
   Util.debugLog(`Loading level ${LEVEL_INDEX + 1} of type ${levelNameToLoad}.`);
+
   mainScene.scene.start(levelNameToLoad, { PHASER_GAME_CONFIG: PHASER_GAME_CONFIG, levelIndex: LEVEL_INDEX + 1, config: GAME_CONFIG });
 }
 
 // Called when the state shuts down, e.g. when transitioning to another state.
 mainScene.shutdown = function () {
+  resetAll();
+}
+
+function resetAll() {
+  resetStates();
+  ANIMATION_QUEUE.reset();
+  resetConfigs();
+}
+
+function resetStates() {
   BATTLE_STATE.reset();
   BOSS_STATE.reset();
   PLAYERS_STATE.reset();
-  ANIMATION_QUEUE.reset();
-  resetConfigs();
 }
 
 function resetConfigs() {
