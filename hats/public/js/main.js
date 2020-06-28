@@ -98,7 +98,8 @@ const SPRITES = {
 }
 
 const SOUNDS = {
-  BATTLE_MUSIC: null
+  BATTLE_MUSIC: null,
+  FIREBALL_SOUND: null
 }
 
 const PLAYER_ONE_INPUT_ANIMATION_MAP = {
@@ -147,6 +148,7 @@ mainScene.preload = function () {
   this.load.image('fireball', 'assets/fireball.png');
 
   this.load.audio('battle_music', GAME_CONFIG.stages[LEVEL_INDEX].musicPath);
+  this.load.audio(GAME_CONFIG.audio.fireballSoundKey, GAME_CONFIG.audio.fireballSoundPath);
 }
 
 mainScene.create = function () {
@@ -170,8 +172,9 @@ mainScene.create = function () {
   );
 
   Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
-
-  SOUNDS.BATTLE_MUSIC = this.sound.add('battle_music', {volume: 0.5});
+  
+  SOUNDS.BATTLE_MUSIC = this.sound.add('battle_music, {volume: 0.5}');
+  SOUNDS.FIREBALL_SOUND = this.sound.add(GAME_CONFIG.audio.fireballSoundKey, {volume: 0.5});
   SOUNDS.BATTLE_MUSIC.play();
 }
 
@@ -347,6 +350,7 @@ function updateGame(time, delta, currentFrameNumber) {
 
   if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
     // White flash animation on boss
+    SOUNDS.FIREBALL_SOUND.play();
     ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation(GAME_LOGIC_CONFIG, SPRITES, BATTLE_STATE, BOSS_STATE, currentFrameNumber));
 
     // Interrupt boss's attack, restart player attack circle
