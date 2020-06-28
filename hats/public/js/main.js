@@ -78,11 +78,13 @@ const BATTLE_STATE = {
 
   // Progress percent towards the ring being filled. Out of 1.
   playerAttackProgressPercent: 0,
+  bossAttackProgressPercent: 0,
 
   reset: function () {
     this.playerAttackSyncMeter = null;
     this.bossAttackTimerMeter = null;
     this.playerAttackProgress = 0;
+    this.bossAttackProgressPercent = 0;
   }
 };
 
@@ -293,6 +295,31 @@ function decreaseDamageRingOnTick() {
 // Main game logic update method.
 function updateGame(time, delta, currentFrameNumber) {
   processInputs(time);
+
+  if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
+    // TODO: Do damage to boss, do any boss reeling animation, pause boss attack meter?
+
+    BATTLE_STATE.playerAttackProgressPercent = 0;
+  }
+
+  if (BOSS_STATE.bossAttackProgressPercent >= 1) {
+    // TODO: Do damage to players, do any player reeling animations
+
+    BATTLE_STATE.bossAttackProgressPercent = 0;
+  }
+
+  // Check boss first, be lenient on players.
+  if (BOSS_STATE.bossHealth === 0) {
+    // TODO: Player beat boss, play boss death, pause inputs, victory music, then load next tutorial scene
+    // this.scene.start(levelData.nextLevelSceneName, currentGameAndLevelData());
+  }
+
+  if (PLAYERS_STATE.health === 0) {
+    // TODO: Players have lost. Transition to game over screen.
+    // Can scenes do a transition animation? Fadeout / RPG-style checkerboard?
+    // this.scene.start(levelData.gameOverSceneName, currentGameData());
+  }
+
   decreaseDamageRingOnTick();
 }
 

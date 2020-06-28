@@ -1,6 +1,6 @@
 "use strict";
 
-const ENABLE_DEBUG_LOGGING = true;
+const ENABLE_DEBUG_LOGGING = false;
 
 export function debugLog(message) {
   if (ENABLE_DEBUG_LOGGING) {
