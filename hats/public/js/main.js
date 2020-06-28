@@ -80,8 +80,6 @@ const PLAYERS_STATE = {
   },
 
   reset: function () {
-    // TODO:
-
     this.health = 100;
     this.lastSuccessfulAttackTimestamp = 0;
     this.resetP1Inputs();
@@ -187,11 +185,11 @@ function processInputs(time) {
     if (isSameInput) {
       // In short, damage done to the enemy is scaled based on how close the inputs were together.
       const timeBetweenAttackInputs = Math.abs(inputStates.p1KeyDownTimestamp - inputStates.p2KeyDownTimestamp);
-      const damageReduction = Math.abs(GAME_LOGIC_CONFIG.PLAYER_ATTACK_WINDOW_MILLIS - timeBetweenAttackInputs);
+      const syncPercentage = (GAME_LOGIC_CONFIG.PLAYER_ATTACK_WINDOW_MILLIS - timeBetweenAttackInputs) / GAME_LOGIC_CONFIG.PLAYER_ATTACK_WINDOW_MILLIS;
 
-      Util.debugLog(`Same input detected. Time between attacks: ${timeBetweenAttackInputs}. Damage reduction: ${damageReduction}.`);
+      Util.debugLog(`Same input detected. Time between attacks: ${timeBetweenAttackInputs}. Sync percent: ${syncPercentage}.`);
 
-      damageBoss(inputStates.p1LastKeyDown, damageReduction);
+      damageBoss(inputStates.p1LastKeyDown, syncPercentage);
 
       PLAYERS_STATE.lastSuccessfulAttackTimestamp = time;
     } else {
@@ -215,8 +213,9 @@ function processInputs(time) {
 // Game logic for boss and any special player logic.
 // ----------------------------------------------------
 
-function damageBoss(attackMoveDirection, damageReductionMillis) {
+// Direction of attack and how close the players were to being in sync (1.0 === players pressed at same millisecond)
+function damageBoss(attackMoveDirection, playerSyncPercentage) {
   // TODO: damage boss based on how well the players did, queue or cue animations, do attack based on the move direction or damage.
 
-  Util.debugLog(`Damaging enemy boss with direction: ${attackMoveDirection} and timing difference of ${damageReductionMillis} millis.`);
+  Util.debugLog(`Damaging enemy boss with direction: ${attackMoveDirection} and timing difference of ${playerSyncPercentage} millis.`);
 }
