@@ -1,23 +1,35 @@
 "use strict";
 
 import { game, PHASER_GAME_CONFIG } from '../main.js';
+import * as Util from '../util.js';
 
 export let tutorialScene = new Phaser.Scene('Tutorial');
 
 const SCENE_OBJECTS = {
   BOX: null,
+  interstitialImage: null,
 }
 
 tutorialScene.init = function(data) {
   // TODO: Pull the scene config data - monster screen picture before fight, or end game screen - from data.
   // See: https://phaser.io/docs/2.3.0/Phaser.State.html#init
+
+  // SCENE_OBJECTS.interstitialImagePath = data.imagePath;
+}
+
+tutorialScene.preload = function() {
+  // this.load.image('interstitial', 'assets/placeholder_tutorial.png');
+  SCENE_OBJECTS.interstitialImage = this.load.image('interstitial', 'assets/placeholder_tutorial.png');
 }
 
 tutorialScene.create = function() {
   // Placeholder graphics
-  SCENE_OBJECTS.BOX = this.add.graphics();
-  SCENE_OBJECTS.BOX.fillStyle(0xffffff, 1);
-  SCENE_OBJECTS.BOX.fillRect(PHASER_GAME_CONFIG.width / 2 - 100, PHASER_GAME_CONFIG.height / 2 - 100, 200, 200);
+  // SCENE_OBJECTS.BOX = this.add.graphics();
+  // SCENE_OBJECTS.BOX.fillStyle(0xffffff, 1);
+  // SCENE_OBJECTS.BOX.fillRect(PHASER_GAME_CONFIG.width / 2 - 100, PHASER_GAME_CONFIG.height / 2 - 100, 200, 200);
+  Util.debugLog(`Phaser game config width: ${PHASER_GAME_CONFIG.width}, scene object: ${SCENE_OBJECTS.interstitialImage}`);
+
+  this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'interstitial');
 
   game.input.mouse.capture = true;
 }
