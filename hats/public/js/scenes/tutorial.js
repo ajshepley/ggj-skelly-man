@@ -1,3 +1,5 @@
+"use strict";
+
 import { game, PHASER_GAME_CONFIG } from '../main.js';
 
 export let tutorialScene = new Phaser.Scene('Tutorial');
