@@ -85,17 +85,19 @@ const BATTLE_STATE = {
   playerAttackProgressPercent: 0,
   bossAttackProgressPercent: 0,
 
+  lastSuccessfulPlayerAttackTimestamp: 0,
+
   reset: function () {
     this.playerAttackSyncMeter = null;
     this.bossAttackTimerMeter = null;
     this.playerAttackProgress = 0;
     this.bossAttackProgressPercent = 0;
+    this.lastSuccessfulPlayerAttackTimestamp = 0;
   }
 };
 
 const PLAYERS_STATE = {
   health: 100,
-  lastSuccessfulAttackTimestamp: 0,
 
   // See: input.js
   PLAYERS_INPUT_STATES: {
@@ -113,7 +115,6 @@ const PLAYERS_STATE = {
 
   reset: function () {
     this.health = 100;
-    this.lastSuccessfulAttackTimestamp = 0;
     this.resetP1Inputs();
     this.resetP2Inputs();
   },
@@ -217,11 +218,11 @@ function addImages(phaserScene) {
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
   // Balcony
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'balcony');
-  
+
   // Characters
   createCharacter(phaserScene, "PLAYER_ONE", PHASER_GAME_CONFIG.width * 0.24, "left_");
   createCharacter(phaserScene, "PLAYER_TWO", PHASER_GAME_CONFIG.width * 0.76, "right_");
-  
+
   // Auras
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'auras');
 }
@@ -256,7 +257,7 @@ function update(time, delta) {
 // TODO: Abstract segments to their own methods.
 function processInputs(time) {
   const inputStates = PLAYERS_STATE.PLAYERS_INPUT_STATES;
-  const canAttack = time - PLAYERS_STATE.lastSuccessfulAttackTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS;
+  const canAttack = time - BATTLE_STATE.lastSuccessfulPlayerAttackTimestamp > GAME_LOGIC_CONFIG.PLAYER_ACTION_DURATION_MILLIS;
 
   if (inputStates.p1LastKeyDown && !inputStates.p1AnimationPlayed) {
     // TODO: Make player1 strike pose and hold it.
@@ -289,7 +290,7 @@ function processInputs(time) {
       // TODO: Any animations for when the players are in sync, e.g. "NICE" text, sparkles/glow, transition frames back to idle, etc.
       growDamageRing(inputStates.p1LastKeyDown, syncPercentage);
 
-      PLAYERS_STATE.lastSuccessfulAttackTimestamp = time;
+      BATTLE_STATE.lastSuccessfulPlayerAttackTimestamp = time;
     } else {
       // TODO: Whiff or move cancellation logic.
     }
