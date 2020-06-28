@@ -97,6 +97,7 @@ const PLAYERS_STATE = {
   health: 100,
   lastSuccessfulAttackTimestamp: 0,
 
+  // See: input.js
   PLAYERS_INPUT_STATES: {
     p1LastKeyDown: null,
     p2LastKeyDown: null,
