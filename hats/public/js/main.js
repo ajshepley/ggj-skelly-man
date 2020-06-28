@@ -80,6 +80,29 @@ const BOSS_CONFIG = {
 
 export const game = new Phaser.Game(PHASER_GAME_CONFIG);
 
+const ANIMATION_QUEUE = {
+  animations: [],
+
+  add: function(animationFunction) {
+    this.animations.push(animationFunction);
+  },
+
+  playAllAndRemove: function() {
+    while(this.animations.length > 0) {
+      try {
+        this.animations.shift().call();
+      } catch (error) {
+        Util.debugLog("Error playing animation.");
+        console.log(error);
+      }
+    }
+  },
+
+  reset: function() {
+    this.animations = [];
+  }
+}
+
 const BATTLE_STATE = {
   playerAttackSyncMeter: null,
   bossAttackTimerMeter: null,
@@ -256,6 +279,8 @@ function update(time, delta) {
     BATTLE_STATE.bossAttackTimerMeter.updateFill(BATTLE_STATE.bossAttackProgressPercent);
   }
 
+  ANIMATION_QUEUE.playAllAndRemove();
+
   // set texts, etc.
 }
 
@@ -269,13 +294,13 @@ function processInputs(time) {
     // You may want to set something like PLAYERS_STATE.needToAnimatedP1DanceMove = true, then use that in the update() method to do the animation,
     // to keep the animation render out of this game logic method.
 
-    SPRITES.PLAYER_ONE.play(PLAYER_ONE_INPUT_ANIMATION_MAP[inputStates.p1LastKeyDown], true);
+    ANIMATION_QUEUE.add(() => SPRITES.PLAYER_ONE.play(PLAYER_ONE_INPUT_ANIMATION_MAP[inputStates.p1LastKeyDown], true));
 
     inputStates.p1AnimationPlayed = true
   }
 
   if (inputStates.p2LastKeyDown && !inputStates.p2AnimationPlayed) {
-    SPRITES.PLAYER_TWO.play(PLAYER_TWO_INPUT_ANIMATION_MAP[inputStates.p2LastKeyDown], true);
+    ANIMATION_QUEUE.add(() => SPRITES.PLAYER_TWO.play(PLAYER_TWO_INPUT_ANIMATION_MAP[inputStates.p2LastKeyDown], true));
 
     inputStates.p2AnimationPlayed = true;
   }
