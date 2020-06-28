@@ -51,7 +51,9 @@ export function create() {
         element.step(time, currentFrameNumber);
       });
 
-      this.manualAnimations = this.manualAnimations.filter(element => !element.isDone());
+      this.manualAnimations = this.manualAnimations.filter(element => {
+        return !element.isDone(time, currentFrameNumber)
+      });
     },
 
     reset: function () {

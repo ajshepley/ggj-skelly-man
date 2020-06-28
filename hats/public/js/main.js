@@ -84,7 +84,6 @@ const PLAYERS_STATE = {
 
 const BOSS_STATE = {
   bossHealth: 100,
-
   reset: function () {
     // TODO
     this.bossHealth = 100;
@@ -93,7 +92,8 @@ const BOSS_STATE = {
 
 const SPRITES = {
   PLAYER_ONE: null,
-  PLAYER_TWO: null
+  PLAYER_TWO: null,
+  BOSS: null
 }
 
 const PLAYER_ONE_INPUT_ANIMATION_MAP = {
@@ -147,9 +147,9 @@ mainScene.preload = function () {
   // this.loadImage, loadAtlas, loadAudio
   this.load.atlas('left_character', 'assets/left_character.png', 'assets/left_character.json');
   this.load.atlas('right_character', 'assets/right_character.png', 'assets/right_character.json');
+  this.load.atlas('monster', 'assets/monster.png', 'assets/monster.json');
 
   this.load.image('background', 'assets/background.png');
-  this.load.image('monster', 'assets/monster.png');
   this.load.image('balcony', 'assets/balcony.png');
   this.load.image('auras', 'assets/auras.png');
 }
@@ -181,7 +181,9 @@ function addImages(phaserScene) {
   // Background
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'background');
   // Monster
-  phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
+  SPRITES.BOSS = phaserScene.add.sprite(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
+  Animation.createBossAnimations(phaserScene, 'monster_');
+  SPRITES.BOSS.play('monster_idle', true);
   // Balcony
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'balcony');
 
@@ -315,9 +317,32 @@ function updateGame(time, delta, currentFrameNumber) {
   growBossAttackMeter();
 
   if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
-    // TODO: Do damage to boss, do any boss reeling animation, pause boss attack meter?
+    // TODO: Do damage to boss
+
+
+    // White flash animation on boss
+    ANIMATION_QUEUE.addManualAnimation({
+      startFrame: currentFrameNumber,
+      animationLength: 60,
+      flashStrength: 1.0,
+      step: function(time, currentFrameNumber) {
+        if (currentFrameNumber === this.startFrame) {
+          SPRITES.BOSS.play('monster_damaged', true);
+        }
+
+        if ((currentFrameNumber - this.startFrame) > this.animationLength) {
+          SPRITES.BOSS.play('monster_idle', true);
+        }
+      },
+      isDone: function(time, currentFrameNumber) {
+        return (currentFrameNumber - this.startFrame) > this.animationLength;
+      }
+    });
 
     BATTLE_STATE.playerAttackProgressPercent = 0;
+    
+    // Interupt boss's attack
+    BATTLE_STATE.bossAttackProgressPercent = 0;
   }
 
   if (BATTLE_STATE.bossAttackProgressPercent >= 1) {

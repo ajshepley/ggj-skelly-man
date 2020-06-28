@@ -36,3 +36,19 @@ export function createCharacterAnimations(phaser, prefix) {
     repeat: 0
   });
 }
+
+export function createBossAnimations(phaser, prefix) {
+  phaser.anims.create({
+    key: `${prefix}idle`,
+    frames: phaser.anims.generateFrameNames('monster', { prefix: 'idle', start: 1, end: 1, zeroPad: 2 }),
+    frameRate: 1,
+    repeat: 0
+  });
+  
+  phaser.anims.create({
+    key: `${prefix}damaged`,
+    frames: phaser.anims.generateFrameNames('monster', { prefix: 'damaged', start: 1, end: 2, zeroPad: 2 }),
+    frameRate: 9,
+    repeat: 1
+  });
+}
