@@ -344,7 +344,7 @@ function updateGame(time, delta, currentFrameNumber) {
 
     BATTLE_STATE.playerAttackProgressPercent = 0;
 
-    // Interupt boss's attack
+    // Interrupt boss's attack
     BATTLE_STATE.bossAttackProgressPercent = 0;
   }
 
