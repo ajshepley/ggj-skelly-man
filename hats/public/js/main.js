@@ -146,6 +146,7 @@ mainScene.preload = function () {
   this.load.image('balcony', 'assets/balcony.png');
   this.load.image('auras', 'assets/auras.png');
   this.load.image('fireball', 'assets/fireball.png');
+
   this.load.audio('battle_music', GAME_CONFIG.stages[LEVEL_INDEX].musicPath);
   this.load.audio(GAME_CONFIG.audio.fireballSoundKey, GAME_CONFIG.audio.fireballSoundPath);
 }
@@ -349,10 +350,8 @@ function updateGame(time, delta, currentFrameNumber) {
 
   if (BATTLE_STATE.playerAttackProgressPercent >= 1) {
     // White flash animation on boss
-    ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation(SPRITES, BATTLE_STATE, currentFrameNumber));
     SOUNDS.FIREBALL_SOUND.play();
-
-    BOSS_STATE.health -= GAME_LOGIC_CONFIG.damagePerFullRing;
+    ANIMATION_QUEUE.addManualAnimation(monsterDamagedAnimation(GAME_LOGIC_CONFIG, SPRITES, BATTLE_STATE, BOSS_STATE, currentFrameNumber));
 
     // Interrupt boss's attack, restart player attack circle
     BATTLE_STATE.bossAttackProgressPercent = 0;
