@@ -129,6 +129,7 @@ mainScene.init = function (data) {
 }
 
 function resetConfigs() {
+  GAME_CONFIG = null;
   PHASER_GAME_CONFIG = null;
   GAME_LOGIC_CONFIG = null;
   BOSS_CONFIG = null;
@@ -237,18 +238,12 @@ function processInputs(time) {
   const canAttack = time - BATTLE_STATE.lastSuccessfulPlayerAttackTimestamp > GAME_LOGIC_CONFIG.playerActionDurationMillis;
 
   if (inputStates.p1LastKeyDown && !inputStates.p1AnimationPlayed) {
-    // TODO: Make player1 strike pose and hold it.
-    // You may want to set something like PLAYERS_STATE.needToAnimatedP1DanceMove = true, then use that in the update() method to do the animation,
-    // to keep the animation render out of this game logic method.
-
     ANIMATION_QUEUE.addAnimation(() => SPRITES.PLAYER_ONE.play(PLAYER_ONE_INPUT_ANIMATION_MAP[inputStates.p1LastKeyDown], true));
-
     inputStates.p1AnimationPlayed = true
   }
 
   if (inputStates.p2LastKeyDown && !inputStates.p2AnimationPlayed) {
     ANIMATION_QUEUE.addAnimation(() => SPRITES.PLAYER_TWO.play(PLAYER_TWO_INPUT_ANIMATION_MAP[inputStates.p2LastKeyDown], true));
-
     inputStates.p2AnimationPlayed = true;
   }
 
