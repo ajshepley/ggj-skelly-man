@@ -146,17 +146,17 @@ const SPRITES = {
 }
 
 const PLAYER_ONE_INPUT_ANIMATION_MAP = {
-  left: "right",
-  right: "left",
-  up: "up",
-  down: "down"
+  left: "left_left",
+  right: "left_right",
+  up: "left_up",
+  down: "left_down"
 }
 
 const PLAYER_TWO_INPUT_ANIMATION_MAP = {
-  left: "left",
-  right: "right",
-  up: "up",
-  down: "down"
+  left: "right_left",
+  right: "right_right",
+  up: "right_up",
+  down: "right_down"
 }
 
 // ----------------------------------------------------
@@ -178,27 +178,17 @@ function shutdown() {
 
 function preload() {
   // this.loadImage, loadAtlas, loadAudio
-  this.load.atlas('character', 'assets/character.png', 'assets/character.json');
+  this.load.atlas('left_character', 'assets/left_character.png', 'assets/left_character.json');
+  this.load.atlas('right_character', 'assets/right_character.png', 'assets/right_character.json');
 
   this.load.image('background', 'assets/background.png');
   this.load.image('monster', 'assets/monster.png');
   this.load.image('balcony', 'assets/balcony.png');
-}
-
-function createCharacter(phaser, sprite, position, isFlipped) {
-  SPRITES[sprite] = phaser.add.sprite(position, PHASER_GAME_CONFIG.height * 0.67, 'character');
-
-  SPRITES[sprite].flipX = isFlipped;
-
-  Animation.createCharacterAnimations(phaser, SPRITES[sprite]);
-  SPRITES[sprite].play('idle', true);
+  this.load.image('auras', 'assets/auras.png');
 }
 
 function create() {
   addImages(this);
-
-  createCharacter(this, "PLAYER_ONE", PHASER_GAME_CONFIG.width * 0.24, true);
-  createCharacter(this, "PLAYER_TWO", PHASER_GAME_CONFIG.width * 0.76, false);
 
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
     this,
@@ -227,6 +217,20 @@ function addImages(phaserScene) {
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
   // Balcony
   phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'balcony');
+  
+  // Characters
+  createCharacter(phaserScene, "PLAYER_ONE", PHASER_GAME_CONFIG.width * 0.24, "left_");
+  createCharacter(phaserScene, "PLAYER_TWO", PHASER_GAME_CONFIG.width * 0.76, "right_");
+  
+  // Auras
+  phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'auras');
+}
+
+function createCharacter(phaser, sprite, position, prefix) {
+  SPRITES[sprite] = phaser.add.sprite(position, PHASER_GAME_CONFIG.height * 0.67, `${prefix}character`);
+
+  Animation.createCharacterAnimations(phaser, prefix);
+  SPRITES[sprite].play(`${prefix}idle`, true);
 }
 
 function update(time, delta) {
