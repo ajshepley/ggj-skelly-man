@@ -159,12 +159,7 @@ function preload() {
 }
 
 function create() {
-  // Background
-  this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'background');
-  // Monster
-  this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
-  // Balcony
-  this.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'balcony');
+  addImages(this);
 
   BATTLE_STATE.playerAttackSyncMeter = new SyncMeter(
     this,
@@ -187,12 +182,25 @@ function create() {
 
   Input.initInput(this, PLAYERS_STATE.PLAYERS_INPUT_STATES);
 
-  // Character animations
-  const character = this.add.sprite(PHASER_GAME_CONFIG.width * 0.76, PHASER_GAME_CONFIG.height * 0.67, 'character');
+  initAnimations(this);
+}
 
-  this.anims.create({
+function addImages(phaserScene) {
+  // Background
+  phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'background');
+  // Monster
+  phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'monster');
+  // Balcony
+  phaserScene.add.image(PHASER_GAME_CONFIG.width / 2, PHASER_GAME_CONFIG.height / 2, 'balcony');
+}
+
+function initAnimations(phaserScene) {
+  // Character animations
+  const character = phaserScene.add.sprite(PHASER_GAME_CONFIG.width * 0.76, PHASER_GAME_CONFIG.height * 0.67, 'character');
+
+  phaserScene.anims.create({
     key: 'idle',
-    frames: this.anims.generateFrameNames('character', { prefix: 'idle', start: 1, end: 3, zeroPad: 2 }),
+    frames: phaserScene.anims.generateFrameNames('character', { prefix: 'idle', start: 1, end: 3, zeroPad: 2 }),
     frameRate: 6,
     repeat: -1
   });
