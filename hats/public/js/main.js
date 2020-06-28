@@ -38,6 +38,9 @@ export const PHASER_GAME_CONFIG = {
 
 // Config and globals for non-phaser game logic, e.g. sync timings, difficulty, etc.
 const GAME_LOGIC_CONFIG = {
+  // Can the user grow the dance ring by pressing the same direction multiple times in a row?
+  ALLOW_SAME_DIRECTION_ATTACKS: false,
+
   // How many millis until the boss bar is full, from 0?
   BOSS_ATTACK_BAR_GROWTH_TIME_MILLIS: 10_000,
 
@@ -86,6 +89,7 @@ const BATTLE_STATE = {
   bossAttackProgressPercent: 0,
 
   lastSuccessfulPlayerAttackTimestamp: 0,
+  lastSuccessfulPlayer1AttackDirection: null,
 
   reset: function () {
     this.playerAttackSyncMeter = null;
@@ -93,6 +97,7 @@ const BATTLE_STATE = {
     this.playerAttackProgress = 0;
     this.bossAttackProgressPercent = 0;
     this.lastSuccessfulPlayerAttackTimestamp = 0;
+    this.lastSuccessfulPlayer1AttackDirection = null;
   }
 };
 
@@ -275,8 +280,12 @@ function processInputs(time) {
     inputStates.p2AnimationPlayed = true;
   }
 
+  const danceDirectionHasChanged =
+    BATTLE_STATE.lastSuccessfulPlayer1AttackDirection !== inputStates.p1LastKeyDown ||
+    GAME_LOGIC_CONFIG.ALLOW_SAME_DIRECTION_ATTACKS;
+
   // Check for a matching input first, before clearing. Allow users to get attacks in as late as possible.
-  if (inputStates.p1LastKeyDown && inputStates.p2LastKeyDown && canAttack) {
+  if (inputStates.p1LastKeyDown && inputStates.p2LastKeyDown && canAttack && danceDirectionHasChanged) {
 
     let isSameInput = Input.arePlayerInputsTheSame(inputStates.p1LastKeyDown, inputStates.p2LastKeyDown);
 
@@ -291,6 +300,7 @@ function processInputs(time) {
       growDamageRing(inputStates.p1LastKeyDown, syncPercentage);
 
       BATTLE_STATE.lastSuccessfulPlayerAttackTimestamp = time;
+      BATTLE_STATE.lastSuccessfulPlayer1AttackDirection = inputStates.p1LastKeyDown;
     } else {
       // TODO: Whiff or move cancellation logic.
     }
