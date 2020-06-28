@@ -145,6 +145,7 @@ mainScene.preload = function () {
   this.load.image('balcony', 'assets/balcony.png');
   this.load.image('auras', 'assets/auras.png');
   this.load.image('fireball', 'assets/fireball.png');
+  
   this.load.audio('battle_music', GAME_CONFIG.stages[LEVEL_INDEX].musicPath);
 }
 
