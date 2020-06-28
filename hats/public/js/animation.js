@@ -24,7 +24,7 @@ export function createCharacterAnimations(phaser, character) {
   
   phaser.anims.create({
     key: 'up',
-    frames: phaser.anims.generateFrameNames('character', { prefix: 'up', start: 1, end: 4, zeroPad: 2 }),
+    frames: phaser.anims.generateFrameNames('character', { prefix: 'up', start: 1, end: 3, zeroPad: 2 }),
     frameRate: 8,
     repeat: 0
   });
