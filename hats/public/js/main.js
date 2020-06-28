@@ -99,7 +99,8 @@ const SPRITES = {
 
 const SOUNDS = {
   BATTLE_MUSIC: null,
-  FIREBALL_SOUND: null
+  FIREBALL_SOUND: null,
+  BOSS_HIT_SOUND: null
 }
 
 const PLAYER_ONE_INPUT_ANIMATION_MAP = {
@@ -149,6 +150,7 @@ mainScene.preload = function () {
 
   this.load.audio('battle_music', GAME_CONFIG.stages[LEVEL_INDEX].musicPath);
   this.load.audio(GAME_CONFIG.audio.fireballSoundKey, GAME_CONFIG.audio.fireballSoundPath);
+  this.load.audio(GAME_CONFIG.audio.bossHitSoundKey, GAME_CONFIG.audio.bossHitSoundPath);
 }
 
 mainScene.create = function () {
@@ -175,6 +177,7 @@ mainScene.create = function () {
 
   SOUNDS.BATTLE_MUSIC = this.sound.add('battle_music');
   SOUNDS.FIREBALL_SOUND = this.sound.add(GAME_CONFIG.audio.fireballSoundKey);
+  SOUNDS.BOSS_HIT_SOUND = this.sound.add(GAME_CONFIG.audio.bossHitSoundKey);
   SOUNDS.BATTLE_MUSIC.play();
 }
 
@@ -364,6 +367,8 @@ function updateGame(time, delta, currentFrameNumber) {
     // TODO: Do damage to players, do any player reeling animations
     PLAYERS_STATE.health -= BOSS_CONFIG.damagePerFullMeter;
     BATTLE_STATE.bossAttackProgressPercent = 0;
+
+    SOUNDS.BOSS_HIT_SOUND.play();
 
     Util.debugLog(`Boss attacked for ${BOSS_CONFIG.damagePerFullMeter} damage! Player health is now ${PLAYERS_STATE.health}.`);
   }

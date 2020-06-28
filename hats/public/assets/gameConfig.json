@@ -1,7 +1,9 @@
 {
   "audio": {
     "fireballSoundPath": "assets/fireball_shoot.mp3",
-    "fireballSoundKey": "fireballSound"
+    "fireballSoundKey": "fireballSound",
+    "bossHitSoundKey": "bossHitSound",
+    "bossHitSoundPath": "assets/boss_hit.mp3"
   },
   "stages": [
     {
