@@ -172,15 +172,15 @@ function create() {
 function update(time, delta) {
   let currentFrameNumber = Math.floor(time / (1_000 / 60));
 
-  processInputs(time);
+  // Engine/logic update.
+  updateGame(time, delta, currentFrameNumber);
 
+  // Render updates.
   if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_CIRCLE_EVERY_N_FRAMES === 0) {
     Util.debugLog(`Player attack progress: ${BATTLE_STATE.playerAttackProgressPercent}`);
     BATTLE_STATE.playerAttackSyncMeter.updateFill(BATTLE_STATE.playerAttackProgressPercent);
     BATTLE_STATE.bossAttackTimerMeter.updateFill(currentFrameNumber / 100);
   }
-
-  decreaseDamageRingOnTick();
   // set texts, etc.
 }
 
@@ -247,3 +247,10 @@ function decreaseDamageRingOnTick() {
   const normalizedDecreaseAmount = ringDecreaseAmountPerFrame / 100;
   BATTLE_STATE.playerAttackProgressPercent = Math.max(BATTLE_STATE.playerAttackProgressPercent - normalizedDecreaseAmount, 0);
 }
+
+// Main game logic update method.
+function updateGame(time, delta, currentFrameNumber) {
+  processInputs(time);
+  decreaseDamageRingOnTick();
+}
+
