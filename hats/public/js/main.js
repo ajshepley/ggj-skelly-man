@@ -250,6 +250,7 @@ function update(time, delta) {
   updateGame(time, delta, currentFrameNumber);
 
   // Render updates.
+  // TODO: These meters could be initialized with these render constants, and played by the manual animation queue instead.
   if (currentFrameNumber % GAME_LOGIC_CONFIG.RENDER_CIRCLE_EVERY_N_FRAMES === 0) {
     Util.debugLog(`Player attack progress: ${BATTLE_STATE.playerAttackProgressPercent}`);
     BATTLE_STATE.playerAttackSyncMeter.updateFill(BATTLE_STATE.playerAttackProgressPercent);
@@ -261,7 +262,7 @@ function update(time, delta) {
   }
 
   ANIMATION_QUEUE.playAllAnimationsAndRemove();
-  ANIMATION_QUEUE.playManualAnimationsAndRemoveIfDone();
+  ANIMATION_QUEUE.playManualAnimationsAndRemoveIfDone(time, currentFrameNumber);
 
   // set texts, etc.
 }
